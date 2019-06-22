@@ -6,11 +6,9 @@
 package migracionproyecto;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -18,25 +16,20 @@ import javafx.stage.Stage;
  * @author Rogencio
  */
 public class MigracionProyecto extends Application {
+    public static Scene scene;
     
     @Override
     public void start(Stage primaryStage) {
-        Button btn = new Button();
-        btn.setText("Proyecto");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Aqui va el primer proyecto");
-            }
-        });
+        SistemaTurnosVista stv= new SistemaTurnosVista();
         
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
         
-        Scene scene = new Scene(root, 300, 250);
+        scene = new Scene(new Group(), 800, 600);
+        scene.setRoot(stv.getRoot());
         
-        primaryStage.setTitle("Aqui va el primer poryecto");
+        Image image= new Image("/Recursos/Logo.png");
+        primaryStage.getIcons().add(image);
+        
+        primaryStage.setTitle("Migración");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
