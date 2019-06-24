@@ -15,7 +15,8 @@ public class Atencion {
     private int prioridad; //Debe ser prioridad 3(Discapacidad) 2(3erEdad) 1(Normal) y asi ordenarlos
     private ArrayList<Turno> turno;
     
-    public Atencion() {
+    public Atencion(int prioridad) {
+        this.prioridad= prioridad;
         generarTurnos();
     }
 
@@ -43,7 +44,7 @@ public class Atencion {
     
     
     public static void main(String[] args) {
-        Atencion a = new Atencion();
+        Atencion a = new Atencion(1);
         System.out.println(a.getTurno());
     }
 

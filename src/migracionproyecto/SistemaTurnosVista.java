@@ -5,8 +5,12 @@
  */
 package migracionproyecto;
 
+import Modelo.Atencion;
+import java.util.PriorityQueue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,9 +30,14 @@ import javafx.scene.text.FontWeight;
  */
 public class SistemaTurnosVista {
     private BorderPane root;
+    private ComboBox prioridad;
+    private Button búsqueda; //Muestra un Pane de Busqueda de los Registros Migratorios Guardados
+    private int priority; //Número del tipo de Persona escogido
+    private PriorityQueue<Atencion> atencionPrioritaria; //Aqui va los turnos registrados
     
     public SistemaTurnosVista() {  
         root= new BorderPane();
+        atencionPrioritaria = new PriorityQueue<>();
         encabezado();
         izquierda();
         derecha();
@@ -43,12 +52,48 @@ public class SistemaTurnosVista {
      * Muestra el encabezado del panel Turnos del Sistema
      */
     private void encabezado(){
-        HBox vb= new HBox();
+        VBox vb= new VBox();
         Label welcome= new Label("BIENVENIDOS AL SISTEMA DE MIGRACIÓN");
+        HBox hb = new HBox();
+        Label choose= new Label("Escoja un turno por \nsu tipo de Persona:");
+        hb.getChildren().addAll(choose,seleccionarPrioridad(), busquedaMigraciones());
+        hb.setPadding(new Insets(10, 10, 10, 10));
+        hb.setSpacing(50);
         setearFuente(welcome);
-        vb.getChildren().add(welcome);
+        vb.getChildren().addAll(welcome,hb);
+        vb.setPadding(new Insets(10, 10, 10, 10));
         vb.setAlignment(Pos.CENTER);
         root.setTop(vb);
+    }
+    
+    /**
+     * Crea un ComboBox con la prioridad de la persona a escoger turno.
+     * Cambia el valor de la prioridad según lo seleccionado.
+     * @return ComboBox con las prioridades.
+     */
+    private ComboBox seleccionarPrioridad(){        
+        prioridad = new ComboBox();
+        prioridad.getItems().addAll("Discapacidad","3era Edad","Normal");
+        prioridad.setPromptText("Normal");
+        prioridad.setOnAction(e->{
+            if(prioridad.getValue().equals("Discapacidad"))
+                priority =3;
+            else if(prioridad.getValue().equals("3era Edad"))
+                priority =2;
+            else if(prioridad.getValue().equals("Normal"))
+                priority =1;
+        }                
+        );
+        return prioridad;        
+    }
+    
+    /**
+     * Botón que muestra por pantalla el registro de Migraciones realizadas.
+     * @return Botón que muestra un Pane.
+     */
+    private Button busquedaMigraciones(){
+        búsqueda = new Button("Búsqueda de \nMigraciones");
+        return búsqueda;
     }
     
     /**
@@ -69,16 +114,23 @@ public class SistemaTurnosVista {
      * Muestra una tabla con los turnos de los pacientes
      */
     private void derecha(){
-        HBox hb= new HBox();
-        Label t= new Label("Turnos");
-        Label p= new Label("Puestos");
+        VBox vb= new VBox();
+        Label t= new Label("Turnos    |    Puestos");
         setearFuente(t);
-        setearFuente(p);
-        hb.getChildren().addAll(t,p);
-        hb.setSpacing(25);
-        hb.setPadding(new Insets(10, 20, 0, 20));
-        hb.setAlignment(Pos.TOP_CENTER);
-        root.setRight(hb);
+        vb.getChildren().add(t);
+        vb.setSpacing(25);
+        vb.setPadding(new Insets(10, 20, 0, 20));
+        vb.setAlignment(Pos.TOP_CENTER);
+        root.setRight(vb);
+    }
+    
+    /**
+     * Debe mostrar el turno|puesto del tipoPersona escogido.
+     * @return Se genera un boton por cada vez que se escoje un turno.
+     */
+    private Button turnoPrioritario(){
+        Button turno = new Button(Integer.toString(priority));
+        return turno;
     }
     
     /**
@@ -101,4 +153,22 @@ public class SistemaTurnosVista {
     public BorderPane getRoot() {
         return root;
     }
+
+    public ComboBox getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(ComboBox prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+    
+    
 }
