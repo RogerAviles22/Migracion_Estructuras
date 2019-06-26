@@ -11,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,13 +32,12 @@ import javafx.scene.text.FontWeight;
 public class SistemaTurnosVista {
     private BorderPane root;
     private ComboBox prioridad;
-    private Button búsqueda; //Muestra un Pane de Busqueda de los Registros Migratorios Guardados
     private int priority; //Número del tipo de Persona escogido
-    private PriorityQueue<Atencion> atencionPrioritaria; //Aqui va los turnos registrados
+    //private PriorityQueue<Atencion> atencionPrioritaria; //Aqui va los turnos registrados
     
     public SistemaTurnosVista() {  
         root= new BorderPane();
-        atencionPrioritaria = new PriorityQueue<>();
+        //atencionPrioritaria = new PriorityQueue<>();
         encabezado();
         izquierda();
         derecha();
@@ -53,10 +53,10 @@ public class SistemaTurnosVista {
      */
     private void encabezado(){
         VBox vb= new VBox();
-        Label welcome= new Label("BIENVENIDOS AL SISTEMA DE MIGRACIÓN");
+        Label welcome= new Label("Registro de Turno");
         HBox hb = new HBox();
         Label choose= new Label("Escoja un turno por \nsu tipo de Persona:");
-        hb.getChildren().addAll(choose,seleccionarPrioridad(), busquedaMigraciones());
+        hb.getChildren().addAll(choose,seleccionarPrioridad());
         hb.setPadding(new Insets(10, 10, 10, 10));
         hb.setSpacing(50);
         setearFuente(welcome);
@@ -87,14 +87,7 @@ public class SistemaTurnosVista {
         return prioridad;        
     }
     
-    /**
-     * Botón que muestra por pantalla el registro de Migraciones realizadas.
-     * @return Botón que muestra un Pane.
-     */
-    private Button busquedaMigraciones(){
-        búsqueda = new Button("Búsqueda de \nMigraciones");
-        return búsqueda;
-    }
+    
     
     /**
      * Carga las imagenes de publicidad con dimension obligatoria de 400*400
@@ -122,16 +115,8 @@ public class SistemaTurnosVista {
         vb.setPadding(new Insets(10, 20, 0, 20));
         vb.setAlignment(Pos.TOP_CENTER);
         root.setRight(vb);
-    }
+    }   
     
-    /**
-     * Debe mostrar el turno|puesto del tipoPersona escogido.
-     * @return Se genera un boton por cada vez que se escoje un turno.
-     */
-    private Button turnoPrioritario(){
-        Button turno = new Button(Integer.toString(priority));
-        return turno;
-    }
     
     /**
      * Muestra el horario de atención del sistema de Migración
@@ -140,9 +125,30 @@ public class SistemaTurnosVista {
         HBox vb= new HBox();
         Label horario= new Label("Horario de Atención Lunes/Viernes 8:00-22:00");
         setearFuente(horario);
-        vb.getChildren().add(horario);
+        vb.getChildren().addAll(horario,back());
+        vb.setSpacing(70);
         vb.setAlignment(Pos.CENTER);
         root.setBottom(vb);
+    }
+    
+    /**
+     * Regresa al menu principal
+     * @return 
+     */
+    private HBox back(){
+        HBox hb = new HBox();
+        Image image = new Image(getClass().getResourceAsStream("/Recursos/back.png"));
+        ImageView view = new ImageView(image);
+        Button back = new Button();
+        back.setBackground(Background.EMPTY);
+        back.setContentDisplay(ContentDisplay.TOP);
+        back.setGraphic(view);
+        back.setOnAction(e->{
+            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
+            MigracionProyecto.scene.setRoot(p.getRoot());
+        });
+        hb.getChildren().add(back);
+        return hb;
     }
     
     private void setearFuente(Label l){

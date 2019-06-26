@@ -20,8 +20,7 @@ public class MigracionProyecto extends Application {
     
     @Override
     public void start(Stage primaryStage) {
-        SistemaTurnosVista stv= new SistemaTurnosVista();
-        
+        SistemaMenuPrincipal stv= new SistemaMenuPrincipal();        
         
         scene = new Scene(new Group(), 800, 600);
         scene.setRoot(stv.getRoot());
