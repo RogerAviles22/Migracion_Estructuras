@@ -6,7 +6,9 @@
 package migracionproyecto;
 
 import Modelo.Atencion;
-import java.util.PriorityQueue;
+import static Modelo.Atencion.enAtencion;
+import Modelo.Turno;
+import java.util.Map;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,6 +21,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -33,11 +36,13 @@ public class SistemaTurnosVista {
     private BorderPane root;
     private ComboBox prioridad;
     private int priority; //Número del tipo de Persona escogido
-    //private PriorityQueue<Atencion> atencionPrioritaria; //Aqui va los turnos registrados
+    private Atencion atencion;
+    private Turno turno;
+    private Map<Integer,Turno> atenciones =  Atencion.enAtencion;
+    private GridPane visualizacion;
     
     public SistemaTurnosVista() {  
         root= new BorderPane();
-        //atencionPrioritaria = new PriorityQueue<>();
         encabezado();
         izquierda();
         derecha();
@@ -67,6 +72,18 @@ public class SistemaTurnosVista {
     }
     
     /**
+     * Crea el Turno y lo dirige a un Puesto dependiendo de la prioridad
+     * @param cifra 
+     */
+    private void crearAtencion(int cifra){
+        atencion= new Atencion();
+        turno = new Turno(cifra, priority);
+        atencion.cargarEnEspera(turno);
+        atencion.cargarEnAtencion();
+        
+    }
+    
+    /**
      * Crea un ComboBox con la prioridad de la persona a escoger turno.
      * Cambia el valor de la prioridad según lo seleccionado.
      * @return ComboBox con las prioridades.
@@ -76,12 +93,26 @@ public class SistemaTurnosVista {
         prioridad.getItems().addAll("Discapacidad","3era Edad","Normal");
         prioridad.setPromptText("Normal");
         prioridad.setOnAction(e->{
-            if(prioridad.getValue().equals("Discapacidad"))
+            if(prioridad.getValue().equals("Discapacidad")){
                 priority =3;
-            else if(prioridad.getValue().equals("3era Edad"))
+                //++Atencion.turnoDiscapacidad;
+                crearAtencion(priority);
+                
+            }
+                
+            else if(prioridad.getValue().equals("3era Edad")){
                 priority =2;
-            else if(prioridad.getValue().equals("Normal"))
+                //++Atencion.turno3erEdad;
+                crearAtencion(priority);
+                
+            }
+                
+            else if(prioridad.getValue().equals("Normal")){
                 priority =1;
+                //++Atencion.turnoNormal;
+                crearAtencion(priority);
+                
+            }
         }                
         );
         return prioridad;        
@@ -108,15 +139,40 @@ public class SistemaTurnosVista {
      */
     private void derecha(){
         VBox vb= new VBox();
-        Label t= new Label("Turnos    |    Puestos");
-        setearFuente(t);
-        vb.getChildren().add(t);
+        Label t= new Label("Turnos");  
+        Label p= new Label("Puestos");   
+        setearFuente(t);   setearFuente(p);  
+        visualizacion= new GridPane();
+        panelVisualizacioTurnos(t, p);
+        vb.getChildren().add( visualizacion);
         vb.setSpacing(25);
         vb.setPadding(new Insets(10, 20, 0, 20));
         vb.setAlignment(Pos.TOP_CENTER);
         root.setRight(vb);
     }   
     
+    private void panelVisualizacioTurnos(Label t, Label p){
+        visualizacion.add(t, 0, 0);
+        visualizacion.add(p, 1, 0);
+        visualizacion.add(new Label("hola"), 0, 1);
+        visualizacion.add(new Label("que"), 1, 1);
+        visualizacion.add(new Label("hace"), 0, 2);
+        visualizacion.add(new Label("AQUI"), 1, 2);
+        visualizacion.add(new Label("deben"), 0, 3);
+        visualizacion.add(new Label("ir"), 1, 3);
+        visualizacion.add(new Label("text"), 0, 4);
+        visualizacion.add(new Label("con"), 1, 4);
+        visualizacion.add(new Label("datos"), 0, 5);
+        visualizacion.add(new Label("turno"), 1, 5);
+        visualizacion.add(new Label("y"), 0, 6);
+        visualizacion.add(new Label("puesto"), 1, 6);
+        visualizacion.setPadding(new Insets(10, 15, 10, 10));
+        visualizacion.setAlignment(Pos.CENTER);
+        visualizacion.setHgap(15);
+        visualizacion.setVgap(15);
+    }
+    
+        
     
     /**
      * Muestra el horario de atención del sistema de Migración

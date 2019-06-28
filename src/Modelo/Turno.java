@@ -10,48 +10,36 @@ package Modelo;
  * @author Rogencio
  */
 public class Turno {
-    private String modulo;
-    private int turno;
-    private int puesto;
+    private int cifra; //Numero del turno
+    private int tipo; //Prioridad del turno 3-2-1
 
-    public Turno(String modulo, int turno, int puesto) {
-        this.modulo = modulo;
-        this.turno = turno;
-        this.puesto=puesto;
+    public Turno(int cifra, int tipo) {
+        this.cifra = cifra;
+        this.tipo = tipo;
+        
     }
 
+    public int getCifra() {
+        return cifra;
+    }
+
+    public void setCifra(int cifra) {
+        this.cifra = cifra;
+    }
+
+    /**
+     * Devuelve la prioridad
+     * @return Prioridad
+     */
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
     
-
     
-
-    @Override
-    public String toString() {
-        return "Modulo: "+modulo+" turno: "+turno+" puesto: "+puesto+ "\n";
-    }
-
-    public String getModulo() {
-        return modulo;
-    }
-
-    public void setModulo(String modulo) {
-        this.modulo = modulo;
-    }
-
-    public int getTurno() {
-        return turno;
-    }
-
-    public void setTurno(int turno) {
-        this.turno = turno;
-    }
-
-    public int getPuesto() {
-        return puesto;
-    }
-
-    public void setPuesto(int puesto) {
-        this.puesto = puesto;
-    }
 
     
     
