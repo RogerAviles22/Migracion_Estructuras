@@ -29,7 +29,7 @@ public class VentanaEmergente {
     }
     
     public static void turnoCreado(){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Turno Creado");
         alert.setHeaderText("Turno creado exitosamente!");
         alert.showAndWait();

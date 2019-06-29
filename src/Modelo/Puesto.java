@@ -10,7 +10,7 @@ package Modelo;
  * @author Rogencio
  */
 public class Puesto {
-    public static int numero;
+    public int numero;
 
     public Puesto() {
         this.numero = 0;

@@ -7,6 +7,7 @@ package Modelo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -17,7 +18,8 @@ import java.util.PriorityQueue;
 public class Atencion {
     public static  Map<Integer,Turno> enAtencion= new HashMap<>(); //Debe ser prioridad 3(Discapacidad) 2(3erEdad) 1(Normal) y asi ordenarlos
     private PriorityQueue<Turno> enEspera;
-    public static ArrayList<Integer> modulo = new ArrayList<>();
+    public static LinkedList<Integer> puestos = new LinkedList<>();
+    public static int modulo=1;
     public static int turnoNormal=0;
     public static int turnoDiscapacidad=0;
     public static int turno3erEdad=0;
@@ -42,12 +44,12 @@ public class Atencion {
     
     /**
      * Crea un Puesto y lo anuncia en el PaneMenuPrincipal
-     * @param p 
      */
-    public static boolean cargarPuesto( Puesto p){
-        if(p.aumentarPuestos()==true && modulo.size()<5){
-            enAtencion.put(p.getNumero(), null);
-            modulo.add(p.getNumero());
+    public static boolean cargarPuesto(){
+        if(modulo<6){
+            enAtencion.put(modulo, null);
+            puestos.add(modulo);
+            modulo++;
             return true;
         }
         return false;

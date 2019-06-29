@@ -35,11 +35,9 @@ public class SistemaMenuPrincipal {
     private Button menuTurno;
     private Button menuRegistro;
     private Button menuBusqueda;
-    private Puesto puesto;
     
     public SistemaMenuPrincipal(){
-        root = new BorderPane();            
-        puesto = new Puesto();
+        root = new BorderPane();   
         BackgroundFill fondo = new BackgroundFill(Color.ORANGE, new CornerRadii(1),
                 new Insets(0.0, 0.0, 0.0, 0.0));
         root.setBackground(new Background(fondo));
@@ -87,9 +85,9 @@ public class SistemaMenuPrincipal {
         crearPuesto.setTextAlignment(TextAlignment.CENTER);
         crearPuesto.setContentDisplay(ContentDisplay.TOP);  
         crearPuesto.setOnAction(e->{
-            if(Atencion.cargarPuesto(puesto)){
-                VentanaEmergente.puestoCreado();
+            if(Atencion.cargarPuesto()){
                 System.out.println(Atencion.modulo);
+                VentanaEmergente.puestoCreado();
             }
             else{
                 VentanaEmergente.sobrepasarLimitePuesto();
