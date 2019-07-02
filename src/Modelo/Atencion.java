@@ -5,9 +5,10 @@
  */
 package Modelo;
 
-import java.util.ArrayList;
+import Controlador.VentanaEmergente;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -17,7 +18,7 @@ import java.util.PriorityQueue;
  */
 public class Atencion {
     public static  Map<Integer,Turno> enAtencion= new HashMap<>(); //Debe ser prioridad 3(Discapacidad) 2(3erEdad) 1(Normal) y asi ordenarlos
-    private PriorityQueue<Turno> enEspera;
+    public static PriorityQueue<Turno> enEspera;
     public static LinkedList<Integer> puestos = new LinkedList<>();
     public static int modulo=1;
     public static int turnoNormal=0;
@@ -25,28 +26,34 @@ public class Atencion {
     public static int turno3erEdad=0;
 
     public Atencion() {
-        this.enEspera = new PriorityQueue<>((Turno t1, Turno t2)-> t2.getTipo()-t1.getTipo());
+        enEspera = new PriorityQueue<>((Turno t1, Turno t2)-> t2.getTipo()-t1.getTipo());
     }
     
-    public void crearTurno(){
-        
-    }
     
     /**
      * Rellena el PriorityQueue con los turnos que no
-     * estan siendo Atendidos
+     * estan siendo Atendidos. 
+     * Si no hay puestos creados, no agrega turnos a la lista
      * Esta funcion deberia estar en el paneTurnos
      * @param t Turno
+     * @return True si hay puestos creados y los agrega a enEspera
      */
-    public void cargarEnEspera(Turno t){
-        enEspera.add(t);
+    public boolean cargarEnEspera(Turno t){
+        if(!puestos.isEmpty()){
+            enEspera.add(t);
+            return true;
+        }else{
+            VentanaEmergente.noHayPuestos();
+            return false;
+        }            
     }
     
     /**
      * Crea un Puesto y lo anuncia en el PaneMenuPrincipal
+     * @return True si el modulo agregado es menor a 5
      */
     public static boolean cargarPuesto(){
-        if(modulo<6){
+        if(modulo<6){ 
             enAtencion.put(modulo, null);
             puestos.add(modulo);
             modulo++;
@@ -73,6 +80,29 @@ public class Atencion {
                     }
                 }
             }
+        }
+        return false;
+    }
+    
+    /**
+     * Elimina el puesto que el Admin escriba, si hay un puesto con Turno, este no
+     * puede ser eliminaod
+     * @param n Numero del puesto a borrar
+     * @return 
+     */
+    public static boolean eliminarPuesto(int n){
+        if(n>0){
+            for (Map.Entry<Integer, Turno> entry : enAtencion.entrySet()){
+                if (entry.getKey() == n && entry.getValue() == null){
+                    enAtencion.remove(entry.getKey());
+                }
+            }
+            ListIterator<Integer> borrado = puestos.listIterator();
+            while(borrado.hasNext()){
+                if(borrado.next().equals(n))
+                    puestos.remove(n);
+            }                
+            return true;
         }
         return false;
     }

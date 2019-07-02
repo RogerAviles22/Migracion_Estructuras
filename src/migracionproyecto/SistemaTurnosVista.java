@@ -17,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -28,7 +27,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -77,13 +75,24 @@ public class SistemaTurnosVista {
     
     /**
      * Crea el Turno y lo dirige a un Puesto dependiendo de la prioridad
+     * Actualiza el GridPane cada vez que agrega un nuevo turno
      * @param cifra 
      */
     private void crearAtencion(int cifra){
         atencion= new Atencion();
         turno = new Turno(cifra, priority); //priority es el tipo de prioridad
-        atencion.cargarEnEspera(turno);
-        atencion.cargarEnAtencion();
+        if(atencion.cargarEnEspera(turno)){
+            atencion.cargarEnAtencion();
+            VentanaEmergente.turnoCreado();
+            if(priority==3)
+                Atencion.turno3erEdad++;
+            else if(priority==2)
+                Atencion.turnoDiscapacidad++;
+            else
+                Atencion.turnoNormal++;
+            visualizacion.getChildren().clear(); //Borra el contenido y actualiza con datos nuevos
+            panelVisualizacioTurnosPuestos(Atencion.puestos, Atencion.enAtencion);
+        }
         
     }
     
@@ -98,23 +107,17 @@ public class SistemaTurnosVista {
         prioridad.setPromptText("Normal");
         prioridad.setOnAction(e->{
             if(prioridad.getValue().equals("Discapacidad")){
-                VentanaEmergente.turnoCreado();
                 priority=3;
-                crearAtencion(Atencion.turno3erEdad++);
-            }
-                
+                crearAtencion(Atencion.turno3erEdad);
+            }                
             else if(prioridad.getValue().equals("3era Edad")){
-                VentanaEmergente.turnoCreado();
                 priority =2;
-                crearAtencion(Atencion.turnoDiscapacidad++);
-            }
-                
-            else if(prioridad.getValue().equals("Normal")){
-                
-                VentanaEmergente.turnoCreado();
+                crearAtencion(Atencion.turnoDiscapacidad);
+            }                
+            else if(prioridad.getValue().equals("Normal")){                
                 priority =1;
-                crearAtencion(Atencion.turnoNormal++);              
-            }
+                crearAtencion(Atencion.turnoNormal);              
+            }            
         }                
         );
         return prioridad;        
@@ -143,9 +146,11 @@ public class SistemaTurnosVista {
         VBox vb= new VBox();
         HBox hb = new HBox();
         Label t= new Label("TURNOS");  
-        cssLabel(t);
-        Label p= new Label("PUESTOS");   
-        cssLabel(p);
+        t.setId("label");
+        t.getStylesheets().add("Controlador/estiloTurno.css");
+        Label p= new Label("PUESTOS");  
+        p.setId("label");
+        p.getStylesheets().add("Controlador/estiloTurno.css");
         hb.setSpacing(25);
         hb.getChildren().addAll(t,p);
         visualizacion= new GridPane();
@@ -162,22 +167,13 @@ public class SistemaTurnosVista {
             ListIterator<Integer> liPuesto = puestos.listIterator();
             int i=0;
             while(liPuesto.hasNext()){
-                Label p= new Label(String.valueOf(liPuesto.next()));                
-                p.setStyle("-fx-background-color: \n"
-                + "        rgba(0,0,0,0.08),\n"
-                + "        linear-gradient(#5a61af, #51536d),\n"
-                + "        linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%);\n"
-                + "    -fx-background-insets: 0 0 -1 0,0,1;\n"
-                + "    -fx-background-radius: 5,5,4;\n"
-                + "    -fx-padding: 3 30 3 30;\n"
-                + "    -fx-text-fill: #242d35;\n"
-                + "    -fx-font-size: 14px;");
-                
-                visualizacion.add(p, 1, i);
+                Label puesto= new Label(String.valueOf(liPuesto.next())); 
+                puesto.setId("puesto");
+                puesto.getStylesheets().add("Controlador/estiloTurno.css");
+                visualizacion.add(puesto, 1, i);
                 i++;
             }
-        }
-        
+        }        
         if(!enAtencion.isEmpty()){
             int i =0;
             for (Map.Entry<Integer, Turno> entry : enAtencion.entrySet()) {
@@ -194,31 +190,12 @@ public class SistemaTurnosVista {
                     i++;
                 }
             }
-        }
-        
+        }        
         visualizacion.setPadding(new Insets(10, 15, 10, 10));
         visualizacion.setAlignment(Pos.CENTER);
         visualizacion.setHgap(15);
         visualizacion.setVgap(15);
     }
-    
-    private void cssLabel(Label l) {
-        l.setStyle("-fx-background-color: \n"
-                + "        #ecebe9,\n"
-                + "        rgba(0,0,0,0.05),\n"
-                + "        linear-gradient(#dcca8a, #c7a740),\n"
-                + "        linear-gradient(#f9f2d6 0%, #f4e5bc 20%, #e6c75d 80%, #e2c045 100%),\n"
-                + "        linear-gradient(#f6ebbe, #e6c34d);\n"
-                + "    -fx-background-insets: 0,9 9 8 9,9,10,11;\n"
-                + "    -fx-background-radius: 50;\n"
-                + "    -fx-padding: 15 30 15 30;\n"
-                + "    -fx-font-family: \"Helvetica\";\n"
-                + "    -fx-font-size: 18px;\n"
-                + "    -fx-text-fill: #311c09;\n"
-                + "    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.1) , 2, 0.0 , 0 , 1);");
-    }
-    
-        
     
     /**
      * Muestra el horario de atención del sistema de Migración
