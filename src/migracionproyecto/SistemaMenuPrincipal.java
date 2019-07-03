@@ -119,6 +119,10 @@ public class SistemaMenuPrincipal {
         menuRegistro= new Button("REGISTRAR\nMIGRANTE",view);
         menuRegistro.setTextAlignment(TextAlignment.CENTER);
         menuRegistro.setContentDisplay(ContentDisplay.TOP);
+        menuRegistro.setOnAction(e->{
+            SistemaRegistroVista stv = new SistemaRegistroVista();
+            MigracionProyecto.scene.setRoot(stv.getRoot());
+        });
     }
     
     /**

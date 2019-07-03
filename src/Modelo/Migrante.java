@@ -12,11 +12,15 @@ package Modelo;
 public class Migrante extends Persona{
     private Nacionalidad nacionalidad;
     private String fechaNacimiento;
+    private String tipo;
 
-    public Migrante(String cedula, String nombre, String apellido, String sexo, Nacionalidad nacionalidad, String fechaNacimiento) {
-        super(cedula, nombre, apellido, sexo);
+    
+
+    public Migrante(String cedula, String nombre, String apellido, String sexo, Nacionalidad nacionalidad, String fechaNacimiento, String tipo) {
+        super(cedula, nombre, apellido, sexo,tipo);
         this.nacionalidad = nacionalidad;
         this.fechaNacimiento = fechaNacimiento;
+        this.tipo=tipo;
     }
 
     public Nacionalidad getNacionalidad() {
@@ -40,6 +44,13 @@ public class Migrante extends Persona{
         return "Migrante: " +getNombre()+" "+getApellido()+" "  +nacionalidad + ", fechaNacimiento=" + fechaNacimiento ;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
     
     /*public static void main(String[] args) {
         Nacionalidad n = new Nacionalidad("Ecuador", "America del Sur", "Guayas", "Guayaquil");

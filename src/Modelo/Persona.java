@@ -14,12 +14,14 @@ public class Persona {
     private String nombre;
     private String apellido;
     private String sexo;
+    private String tipo;
 
-    public Persona(String cedula, String nombre, String apellido, String sexo) {
+    public Persona(String cedula, String nombre, String apellido, String sexo, String tipo) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
         this.sexo = sexo;
+        this.tipo=tipo;
     }
 
     
