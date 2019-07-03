@@ -5,9 +5,6 @@
  */
 package migracionproyecto;
 
-import Controlador.VentanaEmergente;
-import Modelo.Atencion;
-import Modelo.Puesto;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -31,7 +28,7 @@ import javafx.scene.text.TextAlignment;
  */
 public class SistemaMenuPrincipal {
     private BorderPane root;
-    private Button crearPuesto;
+    private Button administrarPuesto;
     private Button menuTurno;
     private Button menuRegistro;
     private Button menuBusqueda;
@@ -43,7 +40,7 @@ public class SistemaMenuPrincipal {
         root.setBackground(new Background(fondo));
         inicializarContenido();
         HBox hb = new HBox();
-        hb.getChildren().addAll(crearPuesto,menuTurno,menuRegistro, menuBusqueda );
+        hb.getChildren().addAll(administrarPuesto,menuTurno,menuRegistro, menuBusqueda );
         hb.setPadding(new Insets(10, 10, 10, 10));
         hb.setSpacing(30);
         hb.setAlignment(Pos.CENTER);
@@ -81,17 +78,12 @@ public class SistemaMenuPrincipal {
     private void primerBoton(){   
         Image image = new Image(getClass().getResourceAsStream("/Recursos/puesto.png"));
         ImageView view = new ImageView(image);
-        crearPuesto= new Button("CREAR\nPUESTO",view);
-        crearPuesto.setTextAlignment(TextAlignment.CENTER);
-        crearPuesto.setContentDisplay(ContentDisplay.TOP);  
-        crearPuesto.setOnAction(e->{
-            if(Atencion.cargarPuesto()){
-                System.out.println(Atencion.modulo);
-                VentanaEmergente.puestoCreado();
-            }
-            else{
-                VentanaEmergente.sobrepasarLimitePuesto();
-            }
+        administrarPuesto= new Button("ADMINISTRAR\nPUESTO",view);
+        administrarPuesto.setTextAlignment(TextAlignment.CENTER);
+        administrarPuesto.setContentDisplay(ContentDisplay.TOP);  
+        administrarPuesto.setOnAction(e->{
+            vistaAdministrarPuesto stv = new vistaAdministrarPuesto();
+            MigracionProyecto.scene.setRoot(stv.getRoot());
         });
     }
     

@@ -5,7 +5,9 @@
  */
 package Controlador;
 
+import java.util.Optional;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 
 /**
  *
@@ -34,4 +36,43 @@ public class VentanaEmergente {
         alert.setHeaderText("Turno creado exitosamente!");
         alert.showAndWait();
     }
+    
+    public static void noHayPuestos(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Sin Puestos");
+        alert.setHeaderText("No hay puestos creados!");
+        alert.setContentText("El admin ya creará futuros puestos");
+        alert.showAndWait();
+    }
+    
+    public static void puestoConTurnos(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Puesto con Atención");
+        alert.setHeaderText("El puesto que desea eliminar está\n atendiendo un turno!");
+        alert.setContentText("Espere a que finalice su registro.");
+        alert.showAndWait();
+    }
+    
+    public static void puestoInexistente(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Puesto Fantasma");
+        alert.setHeaderText("El puesto que desea eliminar que desea eliminar\n no existe!");
+        alert.setContentText("Digite un puesto existente.");
+        alert.showAndWait();
+    }
+    
+    public static void preguntaEliminaPuesto(int n, boolean caso) {
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setTitle("o7planning");
+        dialog.setHeaderText("Ingresa puesto a borrar:");
+        dialog.setContentText("Puesto:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(name -> {
+            System.out.println("HOLA");
+            if(!caso){
+                puestoInexistente();
+            }
+        });
+    }
+    
 }

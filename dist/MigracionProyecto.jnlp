@@ -8,7 +8,11 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+<<<<<<< HEAD
     <jar href="MigracionProyecto.jar" size="346078" download="eager" />
+=======
+    <jar href="MigracionProyecto.jar" size="370696" download="eager" />
+>>>>>>> 0943731d12db28b451c5c5ffbca281da0631ffd4
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="MigracionProyecto" >
     <param name="requiredFXVersion" value="8.0+"/>
