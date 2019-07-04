@@ -6,11 +6,14 @@
 package migracionproyecto;
 
 import Controlador.VentanaEmergente;
+import static Controlador.VentanaEmergente.puestoBorrado;
 import Modelo.Atencion;
+import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -54,8 +57,7 @@ public class vistaAdministrarPuesto {
         crearPuesto.setTextAlignment(TextAlignment.CENTER);
         crearPuesto.setContentDisplay(ContentDisplay.TOP);  
         crearPuesto.setOnAction(e->{
-            if(Atencion.cargarPuesto()){
-                System.out.println(Atencion.modulo);
+            if(Atencion.cargarPuesto()){ //Crea el puesto
                 VentanaEmergente.puestoCreado();
             }
             else{
@@ -70,8 +72,21 @@ public class vistaAdministrarPuesto {
         eliminarPuesto= new Button("ELIMINAR\nPUESTO",view);
         eliminarPuesto.setTextAlignment(TextAlignment.CENTER);
         eliminarPuesto.setContentDisplay(ContentDisplay.TOP);     
-        eliminarPuesto.setOnAction(e->{
-            VentanaEmergente.preguntaEliminaPuesto(0,Atencion.eliminarPuesto(0));
+        eliminarPuesto.setOnAction(e -> {
+            TextInputDialog dialog = new TextInputDialog("");
+            dialog.setTitle("Borrar Puesto");
+            dialog.setHeaderText("Ingresa SÓLO número de puesto");
+            dialog.setContentText("Puesto:");
+            Optional<String> result = dialog.showAndWait();
+            Integer opcion = Integer.parseInt(result.get());
+            result.ifPresent(name -> {
+                if(0== Atencion.eliminarPuesto(opcion))
+                    VentanaEmergente.puestoInexistente();
+                else if(2 == Atencion.eliminarPuesto(opcion))
+                    VentanaEmergente.puestoBorrado();
+                else if(1 == Atencion.eliminarPuesto(opcion))
+                    VentanaEmergente.puestoConTurnos();
+            });
         });
     }
     

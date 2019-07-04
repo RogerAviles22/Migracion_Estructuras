@@ -7,6 +7,7 @@ package migracionproyecto;
 
 import Controlador.VentanaEmergente;
 import Modelo.Atencion;
+import static Modelo.Atencion.enEspera;
 import Modelo.Turno;
 import TDA.CircularLinkedList;
 import java.io.File;
@@ -52,7 +53,6 @@ public class SistemaTurnosVista {
     private CircularLinkedList<ImageView> publicidad = new CircularLinkedList<>();
     private Turno turno;
     private HiloPublicidad hPublicidad; //Hilo con las publicidades
-    //private Map<Integer,Turno> atenciones =  Atencion.enAtencion;
     
     public SistemaTurnosVista() {  
         root= new BorderPane();
@@ -131,7 +131,7 @@ public class SistemaTurnosVista {
                 crearAtencion(Atencion.turnoNormal);              
             }            
         }                
-        );
+        );        
         return prioridad;        
     }
     
@@ -165,6 +165,7 @@ public class SistemaTurnosVista {
                 Image image = new Image(getClass().getResourceAsStream("/Recursos/"+linea));
                 ImageView contenedor = new ImageView(image);
                 publicidad.addLast(contenedor);
+                
             }            
         }catch (FileNotFoundException ex) {
             System.out.println("File Not Found");
@@ -306,7 +307,7 @@ class HiloPublicidad implements Runnable{
             });
                     
             try {
-                Thread.sleep(1000); //Cambia la imagen cada 5 seg
+                Thread.sleep(3000); //Cambia la imagen cada 5 seg
             } catch (InterruptedException ex) {
                 Logger.getLogger(SistemaTurnosVista.class.getName()).log(Level.SEVERE, null, ex);
             }

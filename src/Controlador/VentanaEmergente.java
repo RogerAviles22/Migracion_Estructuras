@@ -5,9 +5,7 @@
  */
 package Controlador;
 
-import java.util.Optional;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextInputDialog;
 
 /**
  *
@@ -61,18 +59,11 @@ public class VentanaEmergente {
         alert.showAndWait();
     }
     
-    public static void preguntaEliminaPuesto(int n, boolean caso) {
-        TextInputDialog dialog = new TextInputDialog("");
-        dialog.setTitle("o7planning");
-        dialog.setHeaderText("Ingresa puesto a borrar:");
-        dialog.setContentText("Puesto:");
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(name -> {
-            System.out.println("HOLA");
-            if(!caso){
-                puestoInexistente();
-            }
-        });
+    public static void puestoBorrado(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Puesto Borrado");
+        alert.setHeaderText("Puesto Borrado con éxito!");
+        alert.showAndWait();
     }
     
 }
