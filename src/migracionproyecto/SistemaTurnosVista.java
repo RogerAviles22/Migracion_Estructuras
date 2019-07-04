@@ -8,9 +8,18 @@ package migracionproyecto;
 import Controlador.VentanaEmergente;
 import Modelo.Atencion;
 import Modelo.Turno;
+import TDA.CircularLinkedList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -37,15 +46,18 @@ import javafx.scene.text.FontWeight;
 public class SistemaTurnosVista {
     private BorderPane root;
     private ComboBox prioridad;
+    private GridPane visualizacion;
     private int priority; //Número del tipo de Persona escogido
     private Atencion atencion;
+    private CircularLinkedList<ImageView> publicidad = new CircularLinkedList<>();
     private Turno turno;
-    private Map<Integer,Turno> atenciones =  Atencion.enAtencion;
-    private GridPane visualizacion;
+    private HiloPublicidad hPublicidad; //Hilo con las publicidades
+    //private Map<Integer,Turno> atenciones =  Atencion.enAtencion;
     
     public SistemaTurnosVista() {  
         root= new BorderPane();
         encabezado();
+        cargarPublicidad();
         izquierda();
         derecha();
         conclusion();
@@ -126,7 +138,7 @@ public class SistemaTurnosVista {
     
     
     /**
-     * Carga las imagenes de publicidad con dimension obligatoria de 400*400
+     * Actualiza las imagenes de publicidad con dimension obligatoria de 400*400
      */
     private void izquierda(){
         VBox vb= new VBox();
@@ -136,7 +148,27 @@ public class SistemaTurnosVista {
         vb.getChildren().add(myLabel);
         vb.setPadding(new Insets(10, 0, 0, 20));
         vb.setAlignment(Pos.CENTER);
+        hPublicidad = new HiloPublicidad(vb, publicidad);
+        Thread publi = new Thread(hPublicidad);
+        publi.start();
         root.setLeft(vb);
+    }
+    
+    /**
+     * Carga las imagenes del .txt y las almacena en el CircularLinkedList
+     */
+    private void cargarPublicidad() {
+        String archivo="src/archivos/publicidades.txt";        
+        try(Scanner sc = new Scanner(new File(archivo))){
+            while(sc.hasNextLine()){
+                String linea= sc.nextLine();
+                Image image = new Image(getClass().getResourceAsStream("/Recursos/"+linea));
+                ImageView contenedor = new ImageView(image);
+                publicidad.addLast(contenedor);
+            }            
+        }catch (FileNotFoundException ex) {
+            System.out.println("File Not Found");
+        }
     }
     
     /**
@@ -186,14 +218,17 @@ public class SistemaTurnosVista {
                         pr = "E -  ";
                     else if(tu.getTipo()==1)
                         pr = "N - ";
-                    visualizacion.add(new Label(pr+String.valueOf(tu.getCifra())), 0, i);
+                    Label turn = new Label(pr+String.valueOf(tu.getCifra()));
+                    turn.setId("puesto");
+                    turn.getStylesheets().add("Controlador/estiloTurno.css");
+                    visualizacion.add(turn , 0, i);
                     i++;
                 }
             }
         }        
         visualizacion.setPadding(new Insets(10, 15, 10, 10));
         visualizacion.setAlignment(Pos.CENTER);
-        visualizacion.setHgap(15);
+        visualizacion.setHgap(50);
         visualizacion.setVgap(15);
     }
     
@@ -207,6 +242,7 @@ public class SistemaTurnosVista {
         vb.getChildren().addAll(horario,back());
         vb.setSpacing(70);
         vb.setAlignment(Pos.CENTER);
+        
         root.setBottom(vb);
     }
     
@@ -223,6 +259,7 @@ public class SistemaTurnosVista {
         back.setContentDisplay(ContentDisplay.TOP);
         back.setGraphic(view);
         back.setOnAction(e->{
+            hPublicidad.setDetener();
             SistemaMenuPrincipal p = new SistemaMenuPrincipal();
             MigracionProyecto.scene.setRoot(p.getRoot());
         });
@@ -237,23 +274,46 @@ public class SistemaTurnosVista {
     
     public BorderPane getRoot() {
         return root;
-    }
+    }   
+    
+}
 
-    public ComboBox getPrioridad() {
-        return prioridad;
-    }
-
-    public void setPrioridad(ComboBox prioridad) {
-        this.prioridad = prioridad;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
+/**
+ * Hilo que ayudará en cargar las imagenes al CircularLinkedList, recibiendo como
+ * parametro en VBox donde estarán las imágenes y el circularLL. 
+ * @author Rogencio
+ */
+class HiloPublicidad implements Runnable{    
+    private VBox izquierda;
+    private CircularLinkedList<ImageView> publicidades;
+    private boolean detener = true;
+    
+    public HiloPublicidad(VBox publicidad, CircularLinkedList<ImageView> image){
+        izquierda = publicidad;
+        this.publicidades = image;
     }
     
+    @Override
+    public void run() {
+        Iterator<ImageView> it = publicidades.iterator();
+        while(detener){
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    izquierda.getChildren().clear(); //Borra el contenido del VBox
+                    izquierda.getChildren().add(it.next()); //Agrega la sgte imagen publicitaria
+                }
+            });
+                    
+            try {
+                Thread.sleep(1000); //Cambia la imagen cada 5 seg
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SistemaTurnosVista.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
+    public void setDetener(){
+        detener = false;
+    }
 }

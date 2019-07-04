@@ -10,5 +10,5 @@ package Modelo;
  * @author Rogencio
  */
 public class Publicidad {
-    
+    private String ruta;
 }

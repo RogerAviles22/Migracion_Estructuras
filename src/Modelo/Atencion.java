@@ -27,6 +27,7 @@ public class Atencion {
 
     public Atencion() {
         enEspera = new PriorityQueue<>((Turno t1, Turno t2)-> t2.getTipo()-t1.getTipo());
+        System.out.println(enEspera);
     }
     
     
@@ -53,7 +54,7 @@ public class Atencion {
      * @return True si el modulo agregado es menor a 5
      */
     public static boolean cargarPuesto(){
-        if(modulo<6){ 
+        if(modulo<8){ 
             enAtencion.put(modulo, null);
             puestos.add(modulo);
             modulo++;
