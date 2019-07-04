@@ -6,12 +6,12 @@
 package migracionproyecto;
 
 import Controlador.VentanaEmergente;
-import static Controlador.VentanaEmergente.puestoBorrado;
 import Modelo.Atencion;
 import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
@@ -22,6 +22,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
 /**
@@ -54,13 +56,17 @@ public class vistaAdministrarPuesto {
         Image image = new Image(getClass().getResourceAsStream("/Recursos/crearPuesto.png"));
         ImageView view = new ImageView(image);
         crearPuesto= new Button("CREAR\nPUESTO",view);
+        crearPuesto.setFont(Font.font("Georgia", FontWeight.BOLD, 11));
         crearPuesto.setTextAlignment(TextAlignment.CENTER);
         crearPuesto.setContentDisplay(ContentDisplay.TOP);  
         crearPuesto.setOnAction(e->{
             if(Atencion.cargarPuesto()){ //Crea el puesto
                 VentanaEmergente.puestoCreado();
             }
-            else{
+            else{         
+                System.out.println("Mapas en cargar : "+ Atencion.enAtencion); 
+                System.out.println("Tamaño del puesto: "+Atencion.puestos.size());
+                System.out.println("En espera: "+Atencion.enEspera);
                 VentanaEmergente.sobrepasarLimitePuesto();
             }
         });
@@ -70,23 +76,12 @@ public class vistaAdministrarPuesto {
         Image image = new Image(getClass().getResourceAsStream("/Recursos/eliminarPuesto.png"));
         ImageView view = new ImageView(image);
         eliminarPuesto= new Button("ELIMINAR\nPUESTO",view);
+        eliminarPuesto.setFont(Font.font("Georgia", FontWeight.BOLD, 11));
         eliminarPuesto.setTextAlignment(TextAlignment.CENTER);
         eliminarPuesto.setContentDisplay(ContentDisplay.TOP);     
         eliminarPuesto.setOnAction(e -> {
-            TextInputDialog dialog = new TextInputDialog("");
-            dialog.setTitle("Borrar Puesto");
-            dialog.setHeaderText("Ingresa SÓLO número de puesto");
-            dialog.setContentText("Puesto:");
-            Optional<String> result = dialog.showAndWait();
-            Integer opcion = Integer.parseInt(result.get());
-            result.ifPresent(name -> {
-                if(0== Atencion.eliminarPuesto(opcion))
-                    VentanaEmergente.puestoInexistente();
-                else if(2 == Atencion.eliminarPuesto(opcion))
-                    VentanaEmergente.puestoBorrado();
-                else if(1 == Atencion.eliminarPuesto(opcion))
-                    VentanaEmergente.puestoConTurnos();
-            });
+            miniPaneEliminar mPE = new miniPaneEliminar();
+            mPE.mostrarVentana();
         });
     }
     

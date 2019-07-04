@@ -5,6 +5,7 @@
  */
 package Controlador;
 
+import Modelo.Turno;
 import javafx.scene.control.Alert;
 
 /**
@@ -35,6 +36,14 @@ public class VentanaEmergente {
         alert.showAndWait();
     }
     
+    public static void turnoEnEspera(Turno t){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Turno en Espera");
+        alert.setHeaderText("Turno "+t.getCifra()+t.getTipo()+" en espera.\n"
+                + "Espere a que termine un turno o creen más puestos.");
+        alert.showAndWait();
+    }
+    
     public static void noHayPuestos(){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Sin Puestos");
@@ -48,14 +57,6 @@ public class VentanaEmergente {
         alert.setTitle("Puesto con Atención");
         alert.setHeaderText("El puesto que desea eliminar está\n atendiendo un turno!");
         alert.setContentText("Espere a que finalice su registro.");
-        alert.showAndWait();
-    }
-    
-    public static void puestoInexistente(){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Puesto Fantasma");
-        alert.setHeaderText("El puesto que desea eliminar que desea eliminar\n no existe!");
-        alert.setContentText("Digite un puesto existente.");
         alert.showAndWait();
     }
     

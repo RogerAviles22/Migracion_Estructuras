@@ -49,15 +49,31 @@ public class Atencion {
      */
     public static boolean cargarPuesto(){
         if(puestos.size()<6){
-            if(puestos.isEmpty()){
+            Turno escogido =enEspera.poll();
+            if(puestos.isEmpty()){ //Caso en el que no haya puestos Creados 
                 int i=1;
                 enAtencion.put(i, null);
                 puestos.add(i);
-            }else{
-                enAtencion.put(puestos.getLast()+1, null);
-                puestos.add(puestos.getLast()+1);                
+                return true;
             }            
+            else if(!puestos.isEmpty() && escogido!=null){ //Caso en el que ya exista puesto creados                  
+                puestos.add(puestos.getLast()+1);
+                enAtencion.put(puestos.getLast()+1, null);
+                for (Map.Entry<Integer, Turno> entry : enAtencion.entrySet()) {
+                    if (entry.getValue() == null) { //Recibe el valor del Turno, es null cuando Puesto no tiene Turnos
+                        entry.setValue(escogido); //Agrega la primera cola en Espera
+                        System.out.println("Mapas en cargar : "+ enAtencion);
+                        return true;
+                    }
+                }
+                enEspera.offer(escogido); //agrega en caso de que no exista
+            }
+            else{
+            enAtencion.put(puestos.getLast()+1, null);
+            puestos.add(puestos.getLast()+1);     
             return true;
+            }            
+            
         }
         return false;
     }
@@ -67,10 +83,10 @@ public class Atencion {
      * Esta funcion debe estar en el PaneTurnos
      * @return False cuando no hay Turnos o los puestos estan llenos
      */
-    public boolean cargarEnAtencion(){
+    public static boolean cargarEnAtencion(){
         Turno escogido =enEspera.poll(); //Escoge la primera cola de la lista
         if(escogido==null)
-            return false; //Retorna false si no existe
+            return false; //Retorna false si no existe Turno
         else {
             if (!enAtencion.isEmpty()) {
                 for (Map.Entry<Integer, Turno> entry : enAtencion.entrySet()) {
@@ -87,48 +103,43 @@ public class Atencion {
         return false; //Si no se agrega un turno al puesto.
     }
     
+    public static LinkedList<Integer> puestosVacios(){
+        LinkedList<Integer> vacio = new LinkedList<>();
+        if(!enAtencion.isEmpty()){
+            for (Map.Entry<Integer, Turno> entry : enAtencion.entrySet()) {
+            if(entry.getValue()==null)
+                vacio.add(entry.getKey());
+        }
+        }
+        return vacio;
+    }
+    
     /**
      * Elimina el puesto que el Admin escriba, si hay un puesto con Turno, este no
      * puede ser eliminado
      * @param n Numero del puesto a borrar
      * @return 
      */
-    public static int eliminarPuesto(Integer n){
-              
-        if(n<0){
-            System.out.println("Hola <0");
-            System.out.println("Mapas: "+ enAtencion);  
-            return 0;
-        }
-            
-        else if(n>0 && n<=enAtencion.size()){            
-            Iterator <Map.Entry<Integer, Turno>> itr = enAtencion.entrySet().iterator();
-            while(itr.hasNext()){
-                Map.Entry<Integer, Turno> entry = itr.next();
-                if (entry.getKey().equals(n) && entry.getValue() == null)
-                    itr.remove();                    
-                
-               // break;
+    public static void eliminarPuesto(Integer n) {
+        Iterator<Map.Entry<Integer, Turno>> itr = enAtencion.entrySet().iterator();
+        while (itr.hasNext()) {
+            Map.Entry<Integer, Turno> entry = itr.next();
+            if (entry.getKey().equals(n) && entry.getValue() == null) {
+                itr.remove();
             }
-            ListIterator<Integer> borrado = puestos.listIterator();
-            while(borrado.hasNext()){
-                Integer b = borrado.next();
-                if(b.equals(n)){
-                    borrado.remove();                    
-                }
-                //break;
-            }          
-            System.out.println("Mapas: "+ enAtencion);  
-            System.out.println("Hola Elimino Turno");
-            return 2;
-        } else if(n>enAtencion.size()){
-            System.out.println("Mapas: "+ enAtencion);  
-            System.out.println("Hola SobrePasaste");
-            return 0;
+            // break;
         }
-        System.out.println("Mapas: "+ enAtencion);  
-        System.out.println("Hola esta ocupado");
-        return 1;
+        ListIterator<Integer> borrado = puestos.listIterator();
+        while (borrado.hasNext()) {
+            Integer b = borrado.next();
+            if (b.equals(n)) {
+                borrado.remove();
+            }
+            //break;
+        }
+        System.out.println("Mapas: " + enAtencion);
+        System.out.println("Hola Elimino Turno");
+
     }
 
     public PriorityQueue<Turno> getEnEspera() {

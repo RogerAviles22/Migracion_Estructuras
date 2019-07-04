@@ -39,10 +39,10 @@ public class Turno {
         this.tipo = tipo;
     }
 
-   /* @Override
+   @Override
     public String toString() {
-        return "Turno{" + "cifra=" + cifra + ", tipo=" + tipo + '}' + "\n";
-    }*/
+        return "El Turno es "  + cifra + "y prioridad " + tipo + "\n" ;
+    }
     
     
 }

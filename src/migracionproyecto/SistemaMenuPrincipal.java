@@ -79,6 +79,7 @@ public class SistemaMenuPrincipal {
         Image image = new Image(getClass().getResourceAsStream("/Recursos/puesto.png"));
         ImageView view = new ImageView(image);
         administrarPuesto= new Button("ADMINISTRAR\nPUESTO",view);
+        administrarPuesto.setFont(Font.font("Georgia",FontWeight.BOLD,15));
         administrarPuesto.setTextAlignment(TextAlignment.CENTER);
         administrarPuesto.setContentDisplay(ContentDisplay.TOP);  
         administrarPuesto.setOnAction(e->{
@@ -94,6 +95,7 @@ public class SistemaMenuPrincipal {
         Image image = new Image(getClass().getResourceAsStream("/Recursos/turno.png"));
         ImageView view = new ImageView(image);
         menuTurno= new Button("OBSERVAR\nTURNOS",view);
+        menuTurno.setFont(Font.font("Georgia",FontWeight.BOLD,15));
         menuTurno.setTextAlignment(TextAlignment.CENTER);
         menuTurno.setContentDisplay(ContentDisplay.TOP);
         menuTurno.setOnAction(e->{
@@ -109,6 +111,7 @@ public class SistemaMenuPrincipal {
         Image image = new Image(getClass().getResourceAsStream("/Recursos/registro.png"));
         ImageView view = new ImageView(image);
         menuRegistro= new Button("REGISTRAR\nMIGRANTE",view);
+        menuRegistro.setFont(Font.font("Georgia",FontWeight.BOLD,15));
         menuRegistro.setTextAlignment(TextAlignment.CENTER);
         menuRegistro.setContentDisplay(ContentDisplay.TOP);
         menuRegistro.setOnAction(e->{
@@ -124,6 +127,7 @@ public class SistemaMenuPrincipal {
         Image image = new Image(getClass().getResourceAsStream("/Recursos/buscar.png"));
         ImageView view = new ImageView(image);
         menuBusqueda= new Button("BUSCAR\nMIGRANTE",view);
+        menuBusqueda.setFont(Font.font("Georgia",FontWeight.BOLD,15));
         menuBusqueda.setTextAlignment(TextAlignment.CENTER);
         menuBusqueda.setContentDisplay(ContentDisplay.TOP);
     }

@@ -7,7 +7,6 @@ package migracionproyecto;
 
 import Controlador.VentanaEmergente;
 import Modelo.Atencion;
-import static Modelo.Atencion.enEspera;
 import Modelo.Turno;
 import TDA.CircularLinkedList;
 import java.io.File;
@@ -75,6 +74,7 @@ public class SistemaTurnosVista {
         Label welcome= new Label("Registro de Turno");
         HBox hb = new HBox();
         Label choose= new Label("Escoja un turno por \nsu tipo de Persona:");
+        choose.setFont(Font.font("Consola", FontWeight.BOLD, 15));
         hb.getChildren().addAll(choose,seleccionarPrioridad());
         hb.setPadding(new Insets(10, 10, 10, 10));
         hb.setSpacing(50);
@@ -131,7 +131,7 @@ public class SistemaTurnosVista {
                 crearAtencion(Atencion.turnoNormal);              
             }            
         }                
-        );        
+        ); 
         return prioridad;        
     }
     
@@ -226,7 +226,11 @@ public class SistemaTurnosVista {
                     i++;
                 }
             }
-        }        
+        }
+
+
+        System.out.println("Tamaño del puesto: "+Atencion.puestos.size());
+        System.out.println("En espera: "+Atencion.enEspera);        
         visualizacion.setPadding(new Insets(10, 15, 10, 10));
         visualizacion.setAlignment(Pos.CENTER);
         visualizacion.setHgap(50);
@@ -269,7 +273,7 @@ public class SistemaTurnosVista {
     }
     
     private void setearFuente(Label l){
-        l.setFont(Font.font("Georgia",FontWeight.BOLD,20));
+        l.setFont(Font.font("Georgia",FontWeight.BOLD,25));
     }
     
     
