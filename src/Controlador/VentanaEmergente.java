@@ -67,4 +67,11 @@ public class VentanaEmergente {
         alert.showAndWait();
     }
     
+    public static void crearMigrante(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Migrante Registrado");
+        alert.setHeaderText("Migrante Creado con exito!");
+        alert.showAndWait();
+    }
+    
 }

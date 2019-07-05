@@ -22,7 +22,7 @@ public class MigracionProyecto extends Application {
     public void start(Stage primaryStage) {
         SistemaMenuPrincipal stv= new SistemaMenuPrincipal();        
         
-        scene = new Scene(new Group(), 800, 600);
+        scene = new Scene(new Group(), 800, 785);
         scene.setRoot(stv.getRoot());
         
         Image image= new Image("/Recursos/Logo.png");

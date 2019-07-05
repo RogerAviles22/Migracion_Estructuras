@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap; 
+import java.util.LinkedList;
 
 /**
  *
@@ -57,7 +58,7 @@ public class Registrador {
     
     public void EscribirArchivo(String confRegistro, Migrante migrante, RegistroMigratorio registro){
         try(BufferedWriter outputStream =
-                 new BufferedWriter(new FileWriter("src/Fuentes/out.txt",true)))
+                 new BufferedWriter(new FileWriter("src/archivos/migrantes.txt",true)))
         {
                 if(registro instanceof Entrada){
                     Entrada entrada=(Entrada) registro;

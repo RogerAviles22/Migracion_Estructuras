@@ -309,6 +309,7 @@ class HiloPublicidad implements Runnable{
                     izquierda.getChildren().add(it.next()); //Agrega la sgte imagen publicitaria
                 }
             });
+            
                     
             try {
                 Thread.sleep(3000); //Cambia la imagen cada 5 seg
