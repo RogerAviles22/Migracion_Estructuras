@@ -5,7 +5,14 @@
  */
 package migracionproyecto;
 
+import Controlador.VentanaEmergente;
 import Modelo.Atencion;
+import static Modelo.Atencion.enAtencion;
+import Modelo.Turno;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Stack;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,18 +39,21 @@ import javafx.stage.Stage;
  */
 public class MiniPaneModificarT {
     private BorderPane root;
-    private Button aceptar;
+    private Button aceptar;    
+    private Button cancelar;
     private Label titulo;
     private Label msg;
     private Stage stageForm;
     private ComboBox puestosCreados;
     private ComboBox puestosModificacion;
+    private LinkedList<Integer> sustitucion;
     
     public MiniPaneModificarT(){
         root= new BorderPane();
         puestosCreados = new ComboBox();
         puestosModificacion = new ComboBox();        
-        aceptar= new Button("Aceptar");        
+        aceptar= new Button("Aceptar");       
+        cancelar= new Button("Cancelar");  
         titulo = new Label("SELECCIONE EL PUESTO \n\tA MODIFICAR"); titulo.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         msg= new Label("ADVERTENCIA: Si no aparecen puestos:\n"
                 + "\t1) No hay puestos creados.\n"
@@ -54,12 +64,13 @@ public class MiniPaneModificarT {
         vb.setSpacing(25);
         vb.setAlignment(Pos.CENTER);
         vb.setPadding(new Insets(10, 20, 40, 20));
-        vb.getChildren().addAll(titulo,msg,cargaComboBox() ,aceptar);
+        vb.getChildren().addAll(titulo,msg,cargaComboBox());
         root.setCenter(vb);
         BackgroundFill fondo = new BackgroundFill(Color.SKYBLUE, new CornerRadii(1),
                 new Insets(0.0, 0.0, 0.0, 0.0));
-        root.setBackground(new Background(fondo));         
-        cerrarVentana();
+        root.setBackground(new Background(fondo)); 
+        cerrarActionVentana();
+        modificarActionPuesto();
     }
     
     private GridPane cargaComboBox(){
@@ -72,33 +83,92 @@ public class MiniPaneModificarT {
         Label lb1 = new Label("Escoja número para modificación: ");
         lb1.setFont(Font.font("Consola", FontWeight.MEDIUM, 13));
         gp.add(lb1, 0, 1);
-        puestosModificacion.getItems().addAll(puestosSustitutos());
+        puestosSustitutos();
+        puestosModificacion.getItems().addAll(sustitucion);
         gp.add(puestosModificacion, 1, 1);
+        gp.add(aceptar, 0, 2); 
+        gp.add(cancelar, 1, 2);
         gp.setPadding(new Insets(10, 10, 10, 10));
         gp.setVgap(15);
         gp.setHgap(15);
         return gp;
     }
     
-    private Stack<Integer> puestosSustitutos(){
-        Stack<Integer> sustitucion= new Stack<>();
+    private void puestosSustitutos(){
+        sustitucion= new LinkedList<>();
         sustitucion.add(100);
-        sustitucion.add(125);
         sustitucion.add(150);
-        sustitucion.add(175);
         sustitucion.add(200);
-        sustitucion.add(225);
-        sustitucion.add(250);
-        sustitucion.add(275);        
+        sustitucion.add(250);        
         sustitucion.add(300);
-        return sustitucion;
+        sustitucion.add(350);
+        sustitucion.add(400);        
+        sustitucion.add(450);
     }
     
-    private void cerrarVentana(){
-        aceptar.setOnMouseClicked(e->{
+    
+    
+    private void cerrarActionVentana(){
+        cancelar.setOnMouseClicked(e->{
             stageForm.close();
         });
     }
+    
+    private void modificarActionPuesto(){
+        aceptar.setOnMouseClicked(e->{
+            if(cambiarPuesto());
+                stageForm.close();
+        });
+    }
+    
+    private boolean cambiarPuesto(){
+        Integer n = (Integer) puestosCreados.getValue();
+        Integer n1 = (Integer) puestosModificacion.getValue();
+        if(n==null || n1== null){
+            VentanaEmergente.campoVacio();
+            return false;
+        }
+        else if(n.equals(n1)){
+            VentanaEmergente.puestoIgual();
+            return false;
+        }
+        else {
+            Integer key = null;
+            Turno turno = null;      
+            Iterator<Map.Entry<Integer, Turno>> itr = enAtencion.entrySet().iterator();        
+            while (itr.hasNext()) {
+                Map.Entry<Integer, Turno> entry = itr.next();
+                if (entry.getKey().equals(n)) {
+                    key = entry.getKey();
+                    turno = entry.getValue();
+                    itr.remove();                    
+                }
+            }
+            enAtencion.put(n1, turno);   
+            
+            ListIterator<Integer> itrPuesto = Atencion.puestos.listIterator();
+            while (itrPuesto.hasNext()) {
+                Integer b = itrPuesto.next();
+                if (b.equals(n)) 
+                    itrPuesto.remove();                
+            }
+            Atencion.puestos.add(n1);
+            
+            ListIterator<Integer> itrSust = sustitucion.listIterator(); 
+            while(itrSust.hasNext()){
+                Integer s = itrSust.next();
+                if (s.equals(n1)) 
+                    itrSust.remove();                
+            }
+            sustitucion.add(key);
+            
+            System.out.println("Key "+key);
+            System.out.println("Ssutitutos "+sustitucion);
+            VentanaEmergente.puestoModificado(n, n1);
+            return true;
+        }                
+    }
+    
     
     public void mostrarVentana(){
         stageForm = new Stage();

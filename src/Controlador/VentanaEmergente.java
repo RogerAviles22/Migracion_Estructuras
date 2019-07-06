@@ -52,11 +52,27 @@ public class VentanaEmergente {
         alert.showAndWait();
     }
     
-    public static void puestoConTurnos(){
+    public static void campoVacio(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Puesto con Atención");
-        alert.setHeaderText("El puesto que desea eliminar está\n atendiendo un turno!");
-        alert.setContentText("Espere a que finalice su registro.");
+        alert.setTitle("Campo vacio");
+        alert.setHeaderText("Falta escoger un campo!");
+        alert.setContentText("Seleccione un puesto para modificación.");
+        alert.showAndWait();
+    }
+    
+    public static void puestoModificado(int n, int n1){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Puesto Modificado");
+        alert.setHeaderText("El puesto "+n+" ha sido modificado por "+n1);
+        alert.setContentText("Modificación exitosa");
+        alert.showAndWait();
+    }
+    
+    public static void puestoIgual(){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Mismo Puesto");
+        alert.setHeaderText("El puesto que escogio es el mismo");
+        alert.setContentText("Modificación rechazada");
         alert.showAndWait();
     }
     

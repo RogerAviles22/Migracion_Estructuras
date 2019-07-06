@@ -40,7 +40,7 @@ public class MiniPaneEliminarT {
         root= new BorderPane();
         puestosVacios = new ComboBox();
         rellenarComboBox();
-        aceptar= new Button("Aceptar");        
+        aceptar= new Button("Salir");        
         titulo = new Label("SELECCIONE EL PUESTO A BORRAR\n"); titulo.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         msg= new Label("ADVERTENCIA: Si no aparecen puestos:\n"
                 + "\t1) No hay puestos creados.\n"
@@ -63,6 +63,7 @@ public class MiniPaneEliminarT {
                 Integer n = (Integer) puestosVacios.getValue();
                 Atencion.eliminarPuesto(n);
                 VentanaEmergente.puestoBorrado();
+                stageForm.close();
             });        
     }
     
