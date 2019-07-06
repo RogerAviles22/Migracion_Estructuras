@@ -11,12 +11,7 @@ import Modelo.Nacionalidad;
 import Modelo.Registrador;
 import Modelo.RegistroMigratorio;
 import Modelo.Salida;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.Scanner;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,18 +22,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -80,12 +67,12 @@ public class SistemaRegistroVista {
         root.setHgap(5);
         root.setVgap(5);
         root.paddingProperty();
-       root.setPadding(new Insets(20));
-        Image image = new Image ("/Recursos/migranteRegistro.jpg");
-        root.setBackground(new Background(new BackgroundImage(image,BackgroundRepeat.REPEAT,
+        root.setPadding(new Insets(20));
+        //Image image = new Image ("/Recursos/migranteRegistro.jpg");
+        /*root.setBackground(new Background(new BackgroundImage(image,BackgroundRepeat.REPEAT,
                                                                   BackgroundRepeat.REPEAT,
                                                                   BackgroundPosition.CENTER,
-                                                                  BackgroundSize.DEFAULT)));
+                                                                  BackgroundSize.DEFAULT)));*/
         //root.setHgap(25);
         //root.setVgap(15);
     }

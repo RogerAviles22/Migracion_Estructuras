@@ -7,13 +7,10 @@ package migracionproyecto;
 
 import Controlador.VentanaEmergente;
 import Modelo.Atencion;
-import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -34,6 +31,7 @@ public class vistaAdministrarPuesto {
     private BorderPane root;    
     private Button crearPuesto;
     private Button eliminarPuesto;
+    private Button modificarPuestos;
 
     public vistaAdministrarPuesto() {
         root = new BorderPane();        
@@ -41,9 +39,10 @@ public class vistaAdministrarPuesto {
                 new Insets(0.0, 0.0, 0.0, 0.0));
         root.setBackground(new Background(fondo));
         crearPuestos();
+        modificarPuestos();
         eliminarPuestos();
         HBox hb = new HBox();
-        hb.getChildren().addAll(crearPuesto, eliminarPuesto);
+        hb.getChildren().addAll(crearPuesto, modificarPuestos,eliminarPuesto);
         hb.setPadding(new Insets(10, 10, 10, 10));
         hb.setSpacing(50);
         hb.setAlignment(Pos.CENTER);
@@ -72,6 +71,19 @@ public class vistaAdministrarPuesto {
         });
     }
     
+    private void modificarPuestos(){
+        Image image = new Image(getClass().getResourceAsStream("/Recursos/modificar.png"));
+        ImageView view = new ImageView(image);
+        modificarPuestos= new Button("MODIFICAR\nPUESTO",view);
+        modificarPuestos.setFont(Font.font("Georgia", FontWeight.BOLD, 11));
+        modificarPuestos.setTextAlignment(TextAlignment.CENTER);
+        modificarPuestos.setContentDisplay(ContentDisplay.TOP);  
+        modificarPuestos.setOnAction(e->{
+            MiniPaneModificarT mpmt = new MiniPaneModificarT();
+            mpmt.mostrarVentana();
+        });
+    }
+    
     private void eliminarPuestos(){
         Image image = new Image(getClass().getResourceAsStream("/Recursos/eliminarPuesto.png"));
         ImageView view = new ImageView(image);
@@ -80,7 +92,7 @@ public class vistaAdministrarPuesto {
         eliminarPuesto.setTextAlignment(TextAlignment.CENTER);
         eliminarPuesto.setContentDisplay(ContentDisplay.TOP);     
         eliminarPuesto.setOnAction(e -> {
-            miniPaneEliminar mPE = new miniPaneEliminar();
+            MiniPaneEliminarT mPE = new MiniPaneEliminarT();
             mPE.mostrarVentana();
         });
     }

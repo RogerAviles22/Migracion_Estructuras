@@ -28,7 +28,7 @@ import javafx.stage.Stage;
  *
  * @author Rogencio
  */
-public class miniPaneEliminar {
+public class MiniPaneEliminarT {
     private BorderPane root;
     private Button aceptar;
     private Label titulo;
@@ -36,7 +36,7 @@ public class miniPaneEliminar {
     private Stage stageForm;
     private ComboBox puestosVacios;
     
-    public miniPaneEliminar(){
+    public MiniPaneEliminarT(){
         root= new BorderPane();
         puestosVacios = new ComboBox();
         rellenarComboBox();
