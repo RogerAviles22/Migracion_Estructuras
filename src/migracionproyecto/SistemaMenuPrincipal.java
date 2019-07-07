@@ -115,8 +115,8 @@ public class SistemaMenuPrincipal {
         menuRegistro.setTextAlignment(TextAlignment.CENTER);
         menuRegistro.setContentDisplay(ContentDisplay.TOP);
         menuRegistro.setOnAction(e->{
-            SistemaRegistroVista stv = new SistemaRegistroVista();
-            MigracionProyecto.scene.setRoot(stv.getRoot());
+            MiniPaneSeleccionP mpsp = new MiniPaneSeleccionP();
+            mpsp.mostrarVentana();
         });
     }
     

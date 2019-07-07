@@ -36,11 +36,10 @@ public class VentanaEmergente {
         alert.showAndWait();
     }
     
-    public static void turnoEnEspera(Turno t){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Turno en Espera");
-        alert.setHeaderText("Turno "+t.getCifra()+t.getTipo()+" en espera.\n"
-                + "Espere a que termine un turno o creen más puestos.");
+    public static void turnoSinSeleccion(){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("No ha escogido un turno");
+        alert.setHeaderText("No ha seleccionado un turno para atender.");
         alert.showAndWait();
     }
     
@@ -75,6 +74,7 @@ public class VentanaEmergente {
         alert.setContentText("Modificación rechazada");
         alert.showAndWait();
     }
+    
     
     public static void puestoBorrado(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

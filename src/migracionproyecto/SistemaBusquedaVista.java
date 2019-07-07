@@ -50,7 +50,7 @@ public class SistemaBusquedaVista {
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(50));
         body();
-        
+        root.getChildren().add(back());
     }
     
     public void body(){

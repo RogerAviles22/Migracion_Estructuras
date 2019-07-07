@@ -12,7 +12,6 @@ import Modelo.Registrador;
 import Modelo.RegistroMigratorio;
 import Modelo.Salida;
 import java.time.LocalDate;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -250,8 +249,7 @@ public class SistemaRegistroVista {
     public void sesionButones(){
         HBox botones= new HBox();
         confirmarRegistro=new Button("CONFIRMAR");
-        confirmarRegistro.setOnAction(e->{
-            
+        confirmarRegistro.setOnAction(e->{            
             if (!(cedulaT.getText()==null && nombreT.getText()==null)){
              Nacionalidad nacionalidad= new Nacionalidad(paisOrigenT.getText(),continenteOrigenT.getText(),ciudadOrigenT.getText(),cantonOrigenT.getText());
              migrante=new Migrante(cedulaT.getText(),nombreT.getText(),apellidoT.getText(),sexoT.getPromptText(),nacionalidad,fechaNacimientoT.toString(),tipoT.getPromptText());
@@ -261,7 +259,8 @@ public class SistemaRegistroVista {
              limpiarData();
              eliminarSesiones();
             }
-            
+            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
+            MigracionProyecto.scene.setRoot(p.getRoot());
             
         });
         vaciarRegistro= new Button("VACIAR DATA");
