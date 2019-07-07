@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap; 
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  *
@@ -22,28 +23,67 @@ import java.util.LinkedList;
 public class Registrador {
     
     
-    public static HashMap<Migrante,HashMap<String,RegistroMigratorio>> leerArchivo(){
+    public static HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> leerArchivo(){
+        HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> migrantes= new HashMap<>();
         
-        HashMap<Migrante,HashMap<String,RegistroMigratorio>> migrantes= new HashMap<>();
         String fileName = "src/archivos/migrantes.txt";  
         try(BufferedReader inputStream = new BufferedReader(new FileReader(fileName));)
         { 
             String line = null;
+            HashMap<String,LinkedList<RegistroMigratorio>> mig;
+            LinkedList<RegistroMigratorio> registros;
             while( (line = inputStream.readLine()) != null ){
+                Migrante migrante;
                 String[] lines=line.split(";");
-                Nacionalidad nacionalidad= new Nacionalidad(lines[6],lines[7],lines[8],lines[9]);
-                Migrante migrante= new Migrante(lines[1],lines[2],lines[3],lines[4],nacionalidad,lines[5],lines[10]);
-                HashMap<String,RegistroMigratorio> mig= new HashMap<>();
-                if (lines[0]=="Entrada"){
-                    //String medioTrans, LocalDate fecha, String ciudadIngreso, String paisIngreso, String continenteIngreso
+                Nacionalidad nacionalidad= new Nacionalidad(lines[5],lines[6],lines[7],lines[8]);
+                migrante= new Migrante(lines[1],lines[2],lines[3],lines[4],nacionalidad,lines[9],lines[10]);
+                if (lines[0].equals("Entrada")){
                     RegistroMigratorio registro= new Entrada(lines[11],lines[12],lines[13],lines[14],lines[15]);
-                    mig.put(lines[0], registro);
-                }else if(lines[0]=="Salida"){
+                    if(migrantes.containsKey(migrante)){
+                           mig=migrantes.get(migrante);
+                            if(mig.containsKey(lines[0])){
+                                registros=mig.get(lines[0]);
+                                registros.add(registro);
+                            }
+                            else{
+                                registros=new LinkedList<>();
+                                registros.add(registro);
+                                mig.put(lines[0], registros);
+                            } 
+                        }
+                        else{
+                        
+                        mig=new HashMap<>();
+                        registros=new LinkedList<>();
+                        registros.add(registro);
+                        mig.put(lines[0], registros);
+                        migrantes.put(migrante, mig);
+                    }
+                    }
+                    
+                else if(lines[0].equals("Salida")){
                     RegistroMigratorio registro= new Salida(lines[11],lines[12],lines[13],lines[14],lines[15]);
-                    mig.put(lines[0], registro);
+                    if(migrantes.containsKey(migrante)){
+                            mig=migrantes.get(migrante);
+                            if(mig.containsKey(lines[0])){
+                                registros=mig.get(lines[0]);
+                                registros.add(registro);
+                            }
+                            else{
+                                registros=new LinkedList<>();
+                                registros.add(registro);
+                                mig.put(lines[0], registros);
+                            }
+                        } else{
+                            mig=new HashMap<>();
+                            registros=new LinkedList<>();
+                            registros.add(registro);
+                            mig.put(lines[0], registros);
+                            migrantes.put(migrante, mig);
+                    }
                 }
-                migrantes.put(migrante, mig);
-            }
+                    
+                }
         }
         catch(FileNotFoundException e)
         {
@@ -52,7 +92,7 @@ public class Registrador {
         catch(IOException e)
         {
            System.out.println("Error reading from file " + fileName);
-        }
+        }       
         return migrantes;
     }
     
@@ -84,5 +124,10 @@ public class Registrador {
         catch(IOException e){
             System.out.println("IOException."+ e.getMessage());
         }
+    }
+    
+    public static void main(String[] args){
+            System.out.println(leerArchivo().keySet());
+        
     }
 }

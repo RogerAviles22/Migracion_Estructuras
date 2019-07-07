@@ -10,6 +10,7 @@ import Modelo.Registrador;
 import Modelo.RegistroMigratorio;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -119,7 +120,17 @@ public class SistemaBusquedaVista {
         check.setContentDisplay(ContentDisplay.TOP);
         check.setGraphic(view);
         check.setOnAction(e->{
-            crearTablaOrigenes(texto.getText());
+            root.getChildren().remove(tabla);
+            
+           if(dp.getValue().toString()!=null){
+                     crearTablaOrigenes(dp.getValue().toString());
+            }else{
+               dp.setValue(null);
+                     crearTablaOrigenes(texto.getText());
+                 }
+           
+                 
+        
         });
         opciones.getChildren().add(check);
     }
@@ -127,11 +138,36 @@ public class SistemaBusquedaVista {
     
     public ObservableList<Migrante> filtrosOrigenes(String filtro){
         ObservableList<Migrante> data= FXCollections.observableArrayList();
-        HashMap<Migrante,HashMap<String,RegistroMigratorio>> run=Registrador.leerArchivo();
+        HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> run=Registrador.leerArchivo();
         run.forEach((k,v)->{
         if (k.getNacionalidad().getCiudad().equals(filtro)){
-            data.add(k);
+            if(data.isEmpty()) {data.add(k);}
+            else{
+                data.forEach((e)->{
+                    if(!(k.equals(e))){
+                        data.add(k);
+                    }
+                
+                });
+            }
         }});
+        return data;
+    }
+    
+    public ObservableList<Migrante> filtrosData(String filtro){
+        ObservableList<Migrante> data= FXCollections.observableArrayList();
+        HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> run=Registrador.leerArchivo();
+        run.forEach((k,v)->{
+            HashMap<String,LinkedList<RegistroMigratorio>> p=v;
+            v.values().forEach((e)->{
+            e.forEach((registro)->{
+            if(registro.getFecha().equals(filtro)){
+                data.add(k);
+            }});
+            
+        });   
+                
+            });
         return data;
     }
     private void crearTablaOrigenes(String filtro){
@@ -165,7 +201,12 @@ public class SistemaBusquedaVista {
         tipoColumns.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         
         tabla=new TableView<>();
-        tabla.setItems(filtrosOrigenes(filtro));
+        if(dp.getValue().toString().equals(filtro)){
+            tabla.setItems(filtrosData(filtro));
+        }
+        else{
+            tabla.setItems(filtrosOrigenes(filtro));
+        };
         tabla.getColumns().addAll(cedulaColumns,nombreColumns,apellidoColumns,sexoColumns,nacionalidadColumns,fechaNacimientoColumns,tipoColumns);
         root.getChildren().add(tabla);
     }

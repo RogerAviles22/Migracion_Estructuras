@@ -65,7 +65,7 @@ public class Nacionalidad {
 
     @Override
     public String toString() {
-        return "Pais=" + pais + " Continente=" + continente + " Ciudad=" + ciudad + "Canton=" + canton ;
+        return pais;
     }
     
     

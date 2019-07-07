@@ -5,6 +5,10 @@
  */
 package Modelo;
 
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Set;
+
 /**
  *
  * @author Rogencio
@@ -57,6 +61,27 @@ public class Migrante extends Persona{
         Migrante m = new Migrante("054", "Roger", "Aviles", "F", n, "20/15/2804");
         System.out.println(m);
     }*/
-    
-    
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.nacionalidad);
+        hash = 97 * hash + Objects.hashCode(this.fechaNacimiento);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Migrante migrante=(Migrante)obj;
+        if(migrante.getNombre().equals(this.getCedula()) && migrante.getApellido().equals(this.getNombre())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    public boolean comprobarExistencia(Migrante migrante){
+        if(migrante==null) return false;
+        if(this.getCedula().equals(migrante.getCedula())) return true;
+        return false;
+    }
 }
