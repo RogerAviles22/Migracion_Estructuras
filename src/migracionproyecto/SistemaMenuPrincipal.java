@@ -123,13 +123,17 @@ public class SistemaMenuPrincipal {
     /**
      * Botón que dirige al menú Búsqueda
      */
-    private void cuartoBoton(){        
+     private void cuartoBoton(){        
         Image image = new Image(getClass().getResourceAsStream("/Recursos/buscar.png"));
         ImageView view = new ImageView(image);
         menuBusqueda= new Button("BUSCAR\nMIGRANTE",view);
         menuBusqueda.setFont(Font.font("Georgia",FontWeight.BOLD,15));
         menuBusqueda.setTextAlignment(TextAlignment.CENTER);
         menuBusqueda.setContentDisplay(ContentDisplay.TOP);
+        menuBusqueda.setOnAction((e)->{
+        SistemaBusquedaVista stv= new SistemaBusquedaVista();
+        MigracionProyecto.scene.setRoot(stv.getRoot());
+        });
     }
     
     public BorderPane getRoot() {

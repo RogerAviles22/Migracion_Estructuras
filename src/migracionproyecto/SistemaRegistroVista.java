@@ -12,12 +12,16 @@ import Modelo.Registrador;
 import Modelo.RegistroMigratorio;
 import Modelo.Salida;
 import java.time.LocalDate;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,13 +45,14 @@ public class SistemaRegistroVista {
     private  RegistroMigratorio registro;///
     private GridPane root2;
     private FlowPane labels;
+    private DatePicker dp;
     
     //CREE ESTAS INSTANCIAS PARA PODER UTILIZAR LOS VALORES DE LOS TEXTFIELDS LUEGO AL CREAR EL MIGRANTE Y SU REGISTRO MIGRATORIO
     private TextField cedulaT;
     private TextField nombreT;
     private TextField apellidoT;
     private ComboBox sexoT;
-    private TextField fechaNacimientoT;
+    private LocalDate fechaNacimientoT;
     private TextField paisOrigenT;
     private TextField ciudadOrigenT;
     private TextField cantonOrigenT;
@@ -60,6 +65,11 @@ public class SistemaRegistroVista {
     private TextField ciudadT;
     private TextField continenteT;
     
+    private  Label medioTrans;
+    private  Label pais;
+    private  Label ciudad;
+    private  Label continente;
+    
     
     public SistemaRegistroVista() {
         root = new GridPane();
@@ -68,6 +78,15 @@ public class SistemaRegistroVista {
         root.setVgap(5);
         root.paddingProperty();
         root.setPadding(new Insets(20));
+        ScrollPane vertical = new ScrollPane(root);
+        vertical.setPrefSize(300, 300); 
+        vertical.setFitToWidth(true); 
+        vertical.setFitToHeight(true); 
+        vertical.setHbarPolicy(ScrollBarPolicy.AS_NEEDED); 
+        vertical.setVbarPolicy(ScrollBarPolicy.AS_NEEDED); 
+        //root.getChildren().add(vertical);
+
+
         //Image image = new Image ("/Recursos/migranteRegistro.jpg");
         /*root.setBackground(new Background(new BackgroundImage(image,BackgroundRepeat.REPEAT,
                                                                   BackgroundRepeat.REPEAT,
@@ -82,6 +101,8 @@ public class SistemaRegistroVista {
         crearLabels();
         crearTextFields();
         sesionButones();
+       
+
     }
     
     private void crearLabel(){
@@ -101,10 +122,10 @@ public class SistemaRegistroVista {
         Label apellido= new Label("Apellido:");
         Label sexo= new Label("Sexo:");
         Label fechaNacimiento= new Label("Fecha Nacimiento:");
-        Label paisOrigen= new Label("Pais Origen:");
-        Label ciudadOrigen= new Label("Ciudad Origen:");
-        Label cantonOrigen= new Label("Canton Origen: ");
-        Label continenteOrigen= new Label("Continente Origen");
+        Label paisOrigen= new Label("Pais de Origen:");
+        Label ciudadOrigen= new Label("Provincia de Origen:");
+        Label cantonOrigen= new Label("Canton de Origen: ");
+        Label continenteOrigen= new Label("Continente de Origen");
         Label tipo= new Label("Tipo: ");
         Label categoria= new Label("ENTRADA/SALIDA: ");
         Label fechaActual= new Label("Fecha Migratoria");
@@ -139,8 +160,10 @@ public class SistemaRegistroVista {
         sexoT= new ComboBox();
         sexoT.getItems().addAll("Hombre","Mujer","LGBTI");
         sexoT.setPromptText("Hombre");
-        fechaNacimientoT= new TextField();
-        fechaNacimientoT.setText("mm/dd/yyyy");
+        dp= new DatePicker();
+        dp.setOnAction((e)->{
+           fechaNacimientoT= dp.getValue();
+        });
         paisOrigenT= new TextField();
         ciudadOrigenT= new TextField();
         cantonOrigenT= new TextField();
@@ -152,7 +175,7 @@ public class SistemaRegistroVista {
         categoriaT.getItems().addAll("Entrada","Salida");
         categoriaT.setPromptText("Entrada");
         categoriaT.setOnAction(e->{
-            
+            eliminarSesiones();
             if(categoriaT.getValue().equals("Entrada")){
                 SesionEntrada();
             }else{
@@ -166,7 +189,7 @@ public class SistemaRegistroVista {
         root2.add(nombreT, 1, 3, 1, 1);
         root2.add(apellidoT, 1, 5, 1, 1);
         root2.add(sexoT, 1, 7, 1, 1);
-        root2.add(fechaNacimientoT, 1, 9, 1, 1);
+        root2.add(dp, 1, 9, 1, 1);
         root2.add(paisOrigenT, 1, 11, 1, 1);
         root2.add(ciudadOrigenT, 1, 13, 1, 1);
         root2.add(cantonOrigenT, 1, 15, 1, 1);
@@ -182,20 +205,20 @@ public class SistemaRegistroVista {
     
     private void SesionEntrada(){
         
-        Label medioTrans= new Label("Medio de Transportacion: ");
-        Label paisEntrada= new Label("Pais al que Ingresa: ");
-        Label ciudadEntrada= new Label("Ciudad al que Ingresa: ");
-        Label continenteEntrada= new Label("Continente al que Ingresa ");
+        medioTrans= new Label("Medio de Transportacion: ");
+        pais= new Label("Pais al que Ingresa: ");
+        ciudad= new Label("Ciudad al que Ingresa: ");
+        continente= new Label("Continente al que Ingresa ");
         medioTransT= new TextField();
         paisT= new TextField();
         ciudadT= new TextField();
         continenteT= new TextField();
         
         root2.add(medioTrans, 0, 25, 1, 1);
-        root2.add(paisEntrada, 0, 27,1,1);
-        root2.add(ciudadEntrada, 0, 29,1,1);
-        root2.add(continenteEntrada, 0, 31,1,1);
-        root2.add(medioTransT, 1, 25, 1, 1);
+        root2.add(pais, 0, 27,1,1);
+        root2.add(ciudad, 0, 29,1,1);
+        root2.add(continente, 0, 31,1,1);
+        root2.add(medioTransT,1, 25, 1, 1);
         root2.add(paisT, 1, 27,1,1);
         root2.add(ciudadT, 1, 29,1,1);
         root2.add(continenteT, 1, 31,1,1);
@@ -205,18 +228,18 @@ public class SistemaRegistroVista {
     //EN ESTA SESION SE CREA LA SALIDA DEL EMIGRANTE
     private void SesionSalida(){
         
-        Label medioTrans= new Label("Medio de Transportacion: ");
-        Label paisSalida= new Label("Pais al que se dirige ");
-        Label ciudadSalida= new Label("Ciudad a la que se dirige: ");
-        Label continenteSalida= new Label("Continente al que se dirige ");
+        medioTrans= new Label("Medio de Transportacion: ");
+        pais= new Label("Pais al que se dirige ");
+        ciudad= new Label("Ciudad a la que se dirige: ");
+        continente= new Label("Continente al que se dirige ");
         medioTransT= new TextField();
         paisT= new TextField();
         ciudadT= new TextField();
         continenteT= new TextField();
         root2.add(medioTrans, 0, 25, 1, 1);
-        root2.add(paisSalida, 0, 27,1,1);
-        root2.add(ciudadSalida, 0, 29,1,1);
-        root2.add(continenteSalida, 0, 31,1,1);
+        root2.add(pais, 0, 27,1,1);
+        root2.add(ciudad, 0, 29,1,1);
+        root2.add(continente, 0, 31,1,1);
         root2.add(medioTransT, 1, 25, 1, 1);
         root2.add(paisT, 1, 27,1,1);
         root2.add(ciudadT, 1, 29,1,1);
@@ -228,15 +251,24 @@ public class SistemaRegistroVista {
         HBox botones= new HBox();
         confirmarRegistro=new Button("CONFIRMAR");
         confirmarRegistro.setOnAction(e->{
+            
+            if (!(cedulaT.getText()==null && nombreT.getText()==null)){
              Nacionalidad nacionalidad= new Nacionalidad(paisOrigenT.getText(),continenteOrigenT.getText(),ciudadOrigenT.getText(),cantonOrigenT.getText());
-             migrante=new Migrante(cedulaT.getText(),nombreT.getText(),apellidoT.getText(),sexoT.getPromptText(),nacionalidad,fechaNacimientoT.getText(),tipoT.getPromptText());
+             migrante=new Migrante(cedulaT.getText(),nombreT.getText(),apellidoT.getText(),sexoT.getPromptText(),nacionalidad,fechaNacimientoT.toString(),tipoT.getPromptText());
              registro=new Salida(medioTransT.getText(),fechaActualT.getText(),ciudadT.getText(),paisT.getText(),continenteT.getText());
-             agente.EscribirArchivo(categoriaT.getPromptText(), migrante, registro);
+             agente.EscribirArchivo(categoriaT.getValue().toString(), migrante, registro);
              VentanaEmergente.crearMigrante();
              limpiarData();
+             eliminarSesiones();
+            }
+            
+            
         });
         vaciarRegistro= new Button("VACIAR DATA");
-        vaciarRegistro.setOnAction(e->{limpiarData();});
+        vaciarRegistro.setOnAction(e->{
+            if(!(cedulaT.getText()=="")){
+            eliminarSesiones();
+            limpiarData();}}); //tengo que validar esto....
         Image image = new Image(getClass().getResourceAsStream("/Recursos/back.png"));
         ImageView view = new ImageView(image);
         retrocederRegistro= new Button();
@@ -259,18 +291,14 @@ public class SistemaRegistroVista {
         cedulaT.clear();
         nombreT.clear();
         apellidoT.clear();
-        fechaNacimientoT.setText("mm/dd/yyyy");
+        fechaNacimientoT=dp.getValue();
         paisOrigenT.clear();
         tipoT.setPromptText("Normal");
         ciudadOrigenT.clear();
         cantonOrigenT.clear();
         continenteOrigenT.clear();
         fechaActualT.setText(LocalDate.now().toString());
-        medioTransT.clear();
-        paisT.clear();
-        ciudadT.clear();
-        continenteT.clear();
-        
+        eliminarSesiones();
     }
     
     private boolean comprobarMigrante(String cedula){
@@ -279,18 +307,23 @@ public class SistemaRegistroVista {
                 cedulaT.setText(k.getCedula());
                 nombreT.setText(k.getNombre());
                 apellidoT.setText(k.getApellido());
-                fechaNacimientoT.setText(k.getFechaNacimiento());
+                dp.setValue(LocalDate.parse(k.getFechaNacimiento()));
                 sexoT.setPromptText(k.getSexo());
                 tipoT.setPromptText(k.getTipo());
                 paisOrigenT.setText(k.getNacionalidad().getPais());
                 ciudadOrigenT.setText(k.getNacionalidad().getCiudad());
                 cantonOrigenT.setText(k.getNacionalidad().getCanton());
                 continenteOrigenT.setText(k.getNacionalidad().getContinente());
+                categoriaT.setValue("Entrada");
                 
             }
             
         });
         return true;
+    }
+    
+    private void eliminarSesiones(){
+        root2.getChildren().removeAll(medioTrans,pais,ciudad,continente,medioTransT,paisT,ciudadT,continenteT);
     }
     
     public GridPane getRoot() {

@@ -22,7 +22,7 @@ import java.util.LinkedList;
 public class Registrador {
     
     
-    public HashMap<Migrante,HashMap<String,RegistroMigratorio>> leerArchivo(){
+    public static HashMap<Migrante,HashMap<String,RegistroMigratorio>> leerArchivo(){
         
         HashMap<Migrante,HashMap<String,RegistroMigratorio>> migrantes= new HashMap<>();
         String fileName = "src/archivos/migrantes.txt";  
@@ -56,7 +56,7 @@ public class Registrador {
         return migrantes;
     }
     
-    public void EscribirArchivo(String confRegistro, Migrante migrante, RegistroMigratorio registro){
+    public static void EscribirArchivo(String confRegistro, Migrante migrante, RegistroMigratorio registro){
         try(BufferedWriter outputStream =
                  new BufferedWriter(new FileWriter("src/archivos/migrantes.txt",true)))
         {
