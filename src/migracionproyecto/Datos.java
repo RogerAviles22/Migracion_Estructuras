@@ -6,13 +6,13 @@
 package migracionproyecto;
 
 import Controlador.VentanaEmergente;
+import Modelo.Entrada;
 import Modelo.Migrante;
 import Modelo.Nacionalidad;
 import Modelo.Registrador;
 import Modelo.RegistroMigratorio;
 import Modelo.Salida;
 import java.time.LocalDate;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -20,8 +20,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,19 +37,18 @@ import javafx.scene.layout.VBox;
  *
  * @author Francisco
  */
-public class SistemaRegistroVista {
+public class Datos {
     private GridPane root;
-    private Button confirmarRegistro;
-    private Button retrocederRegistro;
-    private Button vaciarRegistro;
+    private Button ModificarRegistro;
+    private Button AtrasRegistro;
     private  Migrante migrante;///
     private Registrador agente=new Registrador();///
     private  RegistroMigratorio registro;///
     private GridPane root2;
     private FlowPane labels;
     private DatePicker dp;
+    private String filtro;
     
-    //CREE ESTAS INSTANCIAS PARA PODER UTILIZAR LOS VALORES DE LOS TEXTFIELDS LUEGO AL CREAR EL MIGRANTE Y SU REGISTRO MIGRATORIO
     private TextField cedulaT;
     private TextField nombreT;
     private TextField apellidoT;
@@ -75,17 +72,18 @@ public class SistemaRegistroVista {
     private  Label continente;
     
     
-    public SistemaRegistroVista() {
-        root = new GridPane();
+    public Datos(RegistroMigratorio registro, Migrante migrante,String filtro){
+        root=new GridPane();
+        
+        this.registro=registro;
+        this.migrante=migrante;
+        this.filtro=filtro;
         crearPanel();
         root.setHgap(5);
         root.setVgap(5);
         root.paddingProperty();
         root.setPadding(new Insets(20));
-        
-
-
-        Image image = new Image ("/Recursos/registroPanel.jpg");
+        Image image = new Image ("/Recursos/mapa2.png");
         root.setBackground(new Background(new BackgroundImage(image,BackgroundRepeat.REPEAT,
                                                                   BackgroundRepeat.REPEAT,
                                                                   BackgroundPosition.CENTER,
@@ -93,25 +91,83 @@ public class SistemaRegistroVista {
         root.setHgap(25);
         root.setVgap(15);
     }
-    
-    private void crearPanel(){
+     private void crearPanel(){
         crearLabel();
         crearLabels();
         crearTextFields();
         sesionButones();
+        llenarMigrante();
        
 
     }
-    
-    private void crearLabel(){
+     private void crearLabel(){
         VBox encabeza= new VBox();
         Label encabezado= new Label();
-        encabezado.setText("BIENVENIDO AL SISTEMA DE REGISTRO DE UN MIGRANTE, "
+        encabezado.setText("BIENVENIDO AL SISTEMA DE MODIFICACION DE DATOS DE UN MIGRANTE, "
                 );
-        Label encabezado2= new Label("POR FAVOR ESCRIBIR LOS DATOS CORRECTAMENTE ANTES DE GUARDAR");
+        Label encabezado2= new Label("POR FAVOR ESCRIBIR LOS DATOS CORRECTAMENTE ANTES DE MODIFICAR");
         encabeza.getChildren().addAll(encabezado,encabezado2);
         root.add(encabeza, 0, 0);
     }
+     
+     private void crearTextFields(){
+        
+        cedulaT= new TextField();
+        nombreT= new TextField();
+        apellidoT= new TextField();
+        sexoT= new ComboBox();
+        sexoT.getItems().addAll("Hombre","Mujer","LGBTI");
+        sexoT.setPromptText("Hombre");
+        dp= new DatePicker();
+        dp.setOnAction((e)->{
+           fechaNacimientoT= dp.getValue();
+        });
+        paisOrigenT= new TextField();
+        ciudadOrigenT= new TextField();
+        cantonOrigenT= new TextField();
+        continenteOrigenT= new TextField();
+        tipoT= new ComboBox();
+        tipoT.getItems().addAll("Discapacidad","3era Edad","Normal");
+        tipoT.setPromptText("Normal");
+        categoriaT=new ComboBox();
+        categoriaT.getItems().addAll("Entrada","Salida");
+        
+        categoriaT.setValue(filtro);
+        if(filtro.equals("Entrada")){
+            SesionEntrada();
+        }else{
+            SesionSalida();
+        }
+        categoriaT.setOnAction(e->{
+            eliminarSesiones();
+            if(categoriaT.getValue().equals("Entrada")){
+                SesionEntrada();
+            }else{
+                SesionSalida();
+            }
+        });
+        fechaActualT=new TextField();
+        fechaActualT.setText(LocalDate.now().toString());
+        
+        root2.add(cedulaT, 1, 1, 1, 1);
+        root2.add(nombreT, 1, 3, 1, 1);
+        root2.add(apellidoT, 1, 5, 1, 1);
+        root2.add(sexoT, 1, 7, 1, 1);
+        root2.add(dp, 1, 9, 1, 1);
+        root2.add(paisOrigenT, 1, 11, 1, 1);
+        root2.add(ciudadOrigenT, 1, 13, 1, 1);
+        root2.add(cantonOrigenT, 1, 15, 1, 1);
+        root2.add(continenteOrigenT, 1, 17, 1, 1);
+        root2.add(tipoT, 1, 19, 1, 1);
+        root2.add(categoriaT, 1, 21,1,1);
+        root2.add(fechaActualT, 1, 23, 1, 1);
+        root2.setHgap(5);
+        root2.setVgap(5);
+        
+    
+    }
+    
+
     private void crearLabels(){
         labels= new FlowPane();
         root2= new GridPane();
@@ -146,61 +202,8 @@ public class SistemaRegistroVista {
         root.add(labels, 0, 2);
         
         
-    }
-    private void crearTextFields(){
-        
-        cedulaT= new TextField();
-        cedulaT.setOnKeyPressed(e->{
-            comprobarMigrante(cedulaT.getText());
-        });
-        nombreT= new TextField();
-        apellidoT= new TextField();
-        sexoT= new ComboBox();
-        sexoT.getItems().addAll("Hombre","Mujer","LGBTI");
-        sexoT.setPromptText("Hombre");
-        dp= new DatePicker();
-        dp.setOnAction((e)->{
-           fechaNacimientoT= dp.getValue();
-        });
-        paisOrigenT= new TextField();
-        ciudadOrigenT= new TextField();
-        cantonOrigenT= new TextField();
-        continenteOrigenT= new TextField();
-        tipoT= new ComboBox();
-        tipoT.getItems().addAll("Discapacidad","3era Edad","Normal");
-        tipoT.setPromptText("Normal");
-        categoriaT= new ComboBox();
-        categoriaT.getItems().addAll("Entrada","Salida");
-        categoriaT.setPromptText("Entrada");
-        categoriaT.setOnAction(e->{
-            eliminarSesiones();
-            if(categoriaT.getValue().equals("Entrada")){
-                SesionEntrada();
-            }else{
-                SesionSalida();
-            }
-        });
-        fechaActualT=new TextField();
-        fechaActualT.setText(LocalDate.now().toString());
-        
-        root2.add(cedulaT, 1, 1, 1, 1);
-        root2.add(nombreT, 1, 3, 1, 1);
-        root2.add(apellidoT, 1, 5, 1, 1);
-        root2.add(sexoT, 1, 7, 1, 1);
-        root2.add(dp, 1, 9, 1, 1);
-        root2.add(paisOrigenT, 1, 11, 1, 1);
-        root2.add(ciudadOrigenT, 1, 13, 1, 1);
-        root2.add(cantonOrigenT, 1, 15, 1, 1);
-        root2.add(continenteOrigenT, 1, 17, 1, 1);
-        root2.add(tipoT, 1, 19, 1, 1);
-        root2.add(categoriaT, 1, 21,1,1);
-        root2.add(fechaActualT, 1, 23, 1, 1);
-        root2.setHgap(5);
-        root2.setVgap(5);
-        
     
     }
-    
     private void SesionEntrada(){
         
         medioTrans= new Label("Medio de Transportacion: ");
@@ -244,86 +247,86 @@ public class SistemaRegistroVista {
         root2.add(continenteT, 1, 31,1,1);
     }
     
-    // EN ESTA SESION SE EJECUTA LOS BOTONES
+    private boolean llenarMigrante(){
+                System.out.println(migrante.getCedula());
+                cedulaT.setText(migrante.getCedula());
+                nombreT.setText(migrante.getNombre());
+                apellidoT.setText(migrante.getApellido());
+                dp.setValue(LocalDate.parse(migrante.getFechaNacimiento()));
+                sexoT.setValue(migrante.getSexo());
+                tipoT.setValue(migrante.getTipo());
+                paisOrigenT.setText(migrante.getNacionalidad().getPais());
+                ciudadOrigenT.setText(migrante.getNacionalidad().getCiudad());
+                cantonOrigenT.setText(migrante.getNacionalidad().getCanton());
+                continenteOrigenT.setText(migrante.getNacionalidad().getContinente());
+                fechaActualT.setPromptText(registro.getFecha());
+                medioTransT.setPromptText(registro.getMedioTrans());
+                if(registro instanceof Entrada){
+                    Entrada entrada=(Entrada ) registro;
+                    paisT.setPromptText(entrada.getPaisIngreso());
+                    ciudadT.setPromptText(entrada.getCiudadIngreso());
+                    continenteT.setPromptText(entrada.getContinenteIngreso());
+                }else{
+                    Salida salida=(Salida) registro;
+                    paisT.setPromptText(salida.getPaisDestino());
+                    ciudadT.setPromptText(salida.getCiudadDestino());
+                    continenteT.setPromptText(salida.getContinenteDestino());
+                }
+                    
+        return true;
+    }
     public void sesionButones(){
         HBox botones= new HBox();
-        confirmarRegistro=new Button("CONFIRMAR");
-        confirmarRegistro.setOnAction(e->{
-            
-            if (!(cedulaT.getText()==null && nombreT.getText()==null)){
-             Nacionalidad nacionalidad= new Nacionalidad(paisOrigenT.getText(),continenteOrigenT.getText(),ciudadOrigenT.getText(),cantonOrigenT.getText());
-             migrante=new Migrante(cedulaT.getText(),nombreT.getText(),apellidoT.getText(),sexoT.getPromptText(),nacionalidad,fechaNacimientoT.toString(),tipoT.getPromptText());
-             registro=new Salida(medioTransT.getText(),fechaActualT.getText(),ciudadT.getText(),paisT.getText(),continenteT.getText());
-             agente.EscribirArchivo(categoriaT.getValue().toString(), migrante, registro);
-             VentanaEmergente.crearMigrante();
-             limpiarData();
-             eliminarSesiones();
+        ModificarRegistro=new Button("CONFIRMAR");
+        ModificarRegistro.setOnAction(e->{
+            migrante.setCedula(cedulaT.getText());
+            migrante.setNombre(nombreT.getText());
+            migrante.setApellido(apellidoT.getText());
+            migrante.setSexo(sexoT.getValue().toString());
+            Nacionalidad nacionalidad=new Nacionalidad(paisOrigenT.getText(),continenteOrigenT.getText(),ciudadOrigenT.getText(),cantonOrigenT.getText());
+            migrante.setNacionalidad(nacionalidad);
+            registro.setFecha(fechaActualT.getText());
+            registro.setMedioTrans(medioTransT.getText());
+            if(registro instanceof Entrada){
+                Entrada entrada = (Entrada ) registro;
+                entrada.setCiudadIngreso(ciudadT.getText());
+                entrada.setContinenteIngreso(continenteT.getText());
+                entrada.setPaisIngreso(paisT.getText());
+            }else{
+                Salida salida = (Salida) registro;
+                salida.setCiudadDestino(ciudadT.getText());
+                salida.setContinenteDestino(continenteT.getText());
+                salida.setPaisDestino(paisT.getText());
             }
-            
-            
-        });
-        vaciarRegistro= new Button("VACIAR DATA");
-        vaciarRegistro.setOnAction(e->{
-            if(!(cedulaT.getText()=="")){
-            eliminarSesiones();
-            limpiarData();}}); //tengo que validar esto....
-        Image image = new Image(getClass().getResourceAsStream("/Recursos/back.png"));
-        ImageView view = new ImageView(image);
-        retrocederRegistro= new Button();
-        retrocederRegistro.setBackground(Background.EMPTY);
-        retrocederRegistro.setContentDisplay(ContentDisplay.TOP);
-        retrocederRegistro.setGraphic(view);
-        retrocederRegistro.setOnAction(e->{
+            VentanaEmergente.modificarMigrante();
             SistemaMenuPrincipal p = new SistemaMenuPrincipal();
             MigracionProyecto.scene.setRoot(p.getRoot());
         });
-        botones.getChildren().addAll(retrocederRegistro,confirmarRegistro,vaciarRegistro);
+        Button Eliminar= new Button("ELIMINAR");
+        Eliminar.setOnAction((e)->{
+            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
+            MigracionProyecto.scene.setRoot(p.getRoot());
+        });
+        Image image = new Image(getClass().getResourceAsStream("/Recursos/back.png"));
+        ImageView view = new ImageView(image);
+        AtrasRegistro= new Button();
+        AtrasRegistro.setBackground(Background.EMPTY);
+        AtrasRegistro.setContentDisplay(ContentDisplay.TOP);
+        AtrasRegistro.setGraphic(view);
+        AtrasRegistro.setOnAction(e->{
+            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
+            MigracionProyecto.scene.setRoot(p.getRoot());
+        });
+        botones.getChildren().addAll(ModificarRegistro,Eliminar,AtrasRegistro);
         botones.setAlignment(Pos.CENTER);
         botones.setPadding(Insets.EMPTY);
         botones.setSpacing(30);
         root.add(botones, 0, 3);
     }
-
-    //EN ESTA SESION SIRVE PARA LIMPIAR LOS CAMPOS
-    private void limpiarData(){
-        cedulaT.clear();
-        nombreT.clear();
-        apellidoT.clear();
-        fechaNacimientoT=dp.getValue();
-        paisOrigenT.clear();
-        tipoT.setPromptText("Normal");
-        ciudadOrigenT.clear();
-        cantonOrigenT.clear();
-        continenteOrigenT.clear();
-        fechaActualT.setText(LocalDate.now().toString());
-        eliminarSesiones();
-    }
-    
-    private boolean comprobarMigrante(String cedula){
-        agente.leerArchivo().forEach((k,v)->{
-            if(k.getCedula().equals(cedula)){
-                cedulaT.setText(k.getCedula());
-                nombreT.setText(k.getNombre());
-                apellidoT.setText(k.getApellido());
-                dp.setValue(LocalDate.parse(k.getFechaNacimiento()));
-                sexoT.setPromptText(k.getSexo());
-                tipoT.setPromptText(k.getTipo());
-                paisOrigenT.setText(k.getNacionalidad().getPais());
-                ciudadOrigenT.setText(k.getNacionalidad().getCiudad());
-                cantonOrigenT.setText(k.getNacionalidad().getCanton());
-                continenteOrigenT.setText(k.getNacionalidad().getContinente());
-                categoriaT.setValue("Entrada");
-                
-            }
-            
-        });
-        return true;
-    }
-    
     private void eliminarSesiones(){
         root2.getChildren().removeAll(medioTrans,pais,ciudad,continente,medioTransT,paisT,ciudadT,continenteT);
     }
-    
+
     public GridPane getRoot() {
         return root;
     }
@@ -331,29 +334,5 @@ public class SistemaRegistroVista {
     public void setRoot(GridPane root) {
         this.root = root;
     }
-
-    public Button getConfirmarRegistro() {
-        return confirmarRegistro;
-    }
-
-    public void setConfirmarRegistro(Button confirmarRegistro) {
-        this.confirmarRegistro = confirmarRegistro;
-    }
-
-    public Button getRetrocederRegistro() {
-        return retrocederRegistro;
-    }
-
-    public void setRetrocederRegistro(Button retrocederRegistro) {
-        this.retrocederRegistro = retrocederRegistro;
-    }
-
-    public Button getVaciarRegistro() {
-        return vaciarRegistro;
-    }
-
-    public void setVaciarRegistro(Button vaciarRegistro) {
-        this.vaciarRegistro = vaciarRegistro;
-    }
-}
     
+}

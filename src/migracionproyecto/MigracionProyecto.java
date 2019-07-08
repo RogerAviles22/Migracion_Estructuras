@@ -6,6 +6,7 @@
 package migracionproyecto;
 
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -22,7 +23,7 @@ public class MigracionProyecto extends Application {
     public void start(Stage primaryStage) {
         SistemaMenuPrincipal stv= new SistemaMenuPrincipal();        
         
-        scene = new Scene(new Group(), 780, 785);
+        scene = new Scene(new Group(), 780, 810);
         scene.setRoot(stv.getRoot());
         
         Image image= new Image("/Recursos/Logo.png");

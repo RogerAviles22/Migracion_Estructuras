@@ -90,4 +90,11 @@ public class VentanaEmergente {
         alert.showAndWait();
     }
     
+    public static void modificarMigrante(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Migrante Modificado");
+        alert.setHeaderText("Registro modificado con exito!");
+        alert.showAndWait();
+    }
+    
 }

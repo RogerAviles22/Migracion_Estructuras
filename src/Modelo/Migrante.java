@@ -5,7 +5,10 @@
  */
 package Modelo;
 
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Set;
+import javafx.scene.control.Button;
 
 /**
  *
@@ -53,6 +56,8 @@ public class Migrante extends Persona{
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+    
     
     /*public static void main(String[] args) {
         Nacionalidad n = new Nacionalidad("Ecuador", "America del Sur", "Guayas", "Guayaquil");

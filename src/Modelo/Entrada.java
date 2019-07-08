@@ -13,39 +13,39 @@ import java.time.LocalDate;
  */
 public class Entrada extends RegistroMigratorio{
     
-    private String ciudadIngreso;
-    private String paisIngreso;
-    private String continenteIngreso;
+    private String ciudad;
+    private String pais;
+    private String continente;
     
     public Entrada(String medioTrans, String fecha, String ciudadIngreso, String paisIngreso, String continenteIngreso) {
         super(medioTrans, fecha);
-        this.ciudadIngreso=ciudadIngreso;
-        this.continenteIngreso=continenteIngreso;
-        this.paisIngreso=paisIngreso;
+        this.ciudad=ciudadIngreso;
+        this.continente=continenteIngreso;
+        this.pais=paisIngreso;
     }
 
     public String getCiudadIngreso() {
-        return ciudadIngreso;
+        return ciudad;
     }
 
     public void setCiudadIngreso(String ciudadIngreso) {
-        this.ciudadIngreso = ciudadIngreso;
+        this.ciudad = ciudadIngreso;
     }
 
     public String getPaisIngreso() {
-        return paisIngreso;
+        return pais;
     }
 
     public void setPaisIngreso(String paisIngreso) {
-        this.paisIngreso = paisIngreso;
+        this.pais = paisIngreso;
     }
 
     public String getContinenteIngreso() {
-        return continenteIngreso;
+        return continente;
     }
 
     public void setContinenteIngreso(String continenteIngreso) {
-        this.continenteIngreso = continenteIngreso;
+        this.continente = continenteIngreso;
     }
     
 }

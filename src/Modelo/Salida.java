@@ -12,39 +12,39 @@ import java.time.LocalDate;
  * @author Francisco
  */
 public class Salida extends RegistroMigratorio{
-    private String ciudadDestino;
-    private String paisDestino;
-    private String continenteDestino;
+    private String ciudad;
+    private String pais;
+    private String continente;
 
     public Salida(String medioTrans, String fecha, String ciudadDestino,String paisDestino, String continenteDestino) {
         super(medioTrans, fecha);
-        this.paisDestino=paisDestino;
-        this.ciudadDestino=ciudadDestino;
-        this.continenteDestino=continenteDestino;
+        this.pais=paisDestino;
+        this.ciudad=ciudadDestino;
+        this.continente=continenteDestino;
     }
 
     public String getCiudadDestino() {
-        return ciudadDestino;
+        return ciudad;
     }
 
     public void setCiudadDestino(String ciudadDestino) {
-        this.ciudadDestino = ciudadDestino;
+        this.ciudad = ciudadDestino;
     }
 
     public String getPaisDestino() {
-        return paisDestino;
+        return pais;
     }
 
     public void setPaisDestino(String paisDestino) {
-        this.paisDestino = paisDestino;
+        this.pais = paisDestino;
     }
 
     public String getContinenteDestino() {
-        return continenteDestino;
+        return continente;
     }
 
     public void setContinenteDestino(String continenteDestino) {
-        this.continenteDestino = continenteDestino;
+        this.continente = continenteDestino;
     }
     
 }

@@ -5,9 +5,11 @@
  */
 package migracionproyecto;
 
+import Modelo.Entrada;
 import Modelo.Migrante;
 import Modelo.Registrador;
 import Modelo.RegistroMigratorio;
+import Modelo.Salida;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,13 +23,18 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
-;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -41,8 +48,10 @@ public class SistemaBusquedaVista {
     private TableView<Migrante> tabla;
     private VBox root;
     private ComboBox selector;
-    private DatePicker dp;
-    TextField texto;
+    private DatePicker dp= new DatePicker();
+    TextField texto= new TextField();
+    TextField textoDestino= new TextField();
+    TextField textoCanton=new TextField();
     
     
     public SistemaBusquedaVista(){
@@ -50,7 +59,13 @@ public class SistemaBusquedaVista {
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(50));
         body();
-        root.getChildren().add(back());
+        Image image = new Image ("/Recursos/mapa2.png");
+        root.setBackground(new Background(new BackgroundImage(image,BackgroundRepeat.REPEAT,
+                                                                  BackgroundRepeat.REPEAT,
+                                                                  BackgroundPosition.DEFAULT,
+                                                                  BackgroundSize.DEFAULT)));
+        
+        
     }
     
     public void body(){
@@ -93,7 +108,13 @@ public class SistemaBusquedaVista {
         if(selector.getValue().equals("Fecha")){
             opciones.getChildren().add(crearCalender());
         }
-        else{crearTextos();
+        else if(selector.getValue().equals("Destinos")){
+            TextoDestino();
+        }
+        else if(selector.getValue().equals("Canton de Origen")){
+            TextoCanton();
+        }else{
+            crearTextos();
         }
         botonCheck();
         });
@@ -102,9 +123,19 @@ public class SistemaBusquedaVista {
         
         
     }
+    private void TextoDestino(){
+            textoDestino.setAlignment(Pos.CENTER);
+            textoDestino.setMaxWidth(250);
+            opciones.getChildren().add(textoDestino);
+    }
+    private void TextoCanton(){
+        
+            textoCanton.setAlignment(Pos.CENTER);
+            textoCanton.setMaxWidth(250);
+            opciones.getChildren().add(textoCanton);
+    }
     
     private void crearTextos(){
-            texto= new TextField();
             texto.setAlignment(Pos.CENTER);
             texto.setMaxWidth(250);
             opciones.getChildren().add(texto);
@@ -121,12 +152,22 @@ public class SistemaBusquedaVista {
         check.setGraphic(view);
         check.setOnAction(e->{
             root.getChildren().remove(tabla);
-            
-           if(dp.getValue().toString()!=null){
-                     crearTablaOrigenes(dp.getValue().toString());
-            }else{
-               dp.setValue(null);
-                     crearTablaOrigenes(texto.getText());
+            if(dp.getValue()!=null){
+                crearTablaOrigenes(dp.getValue().toString());
+                dp.setValue(null);
+            }
+            else if(textoDestino.getText()!=null){
+                crearTablaOrigenes(textoDestino.getText());
+                textoDestino.setText(null);
+                 //OJASO
+            }
+            else if(textoCanton.getText()!=null){
+                crearTablaOrigenes(textoCanton.getText());
+                 textoCanton.setText(null);//OJASO
+            }
+            else if(texto.getText()!=null){
+                crearTablaOrigenes(texto.getText());
+                texto.setText(null);//OJASO
                  }
            
                  
@@ -140,17 +181,12 @@ public class SistemaBusquedaVista {
         ObservableList<Migrante> data= FXCollections.observableArrayList();
         HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> run=Registrador.leerArchivo();
         run.forEach((k,v)->{
-        if (k.getNacionalidad().getCiudad().equals(filtro)){
-            if(data.isEmpty()) {data.add(k);}
-            else{
-                data.forEach((e)->{
-                    if(!(k.equals(e))){
-                        data.add(k);
-                    }
-                
-                });
-            }
-        }});
+        if ((k.getNacionalidad().getCiudad().equals(filtro))){
+            data.add(k);
+        }else if (k.getNacionalidad().getCanton().equals(filtro)){
+            data.add(k);
+        }}
+        );
         return data;
     }
     
@@ -163,7 +199,14 @@ public class SistemaBusquedaVista {
             e.forEach((registro)->{
             if(registro.getFecha().equals(filtro)){
                 data.add(k);
-            }});
+            }else if(registro instanceof Salida){
+                Salida salida=(Salida) registro;
+                if(salida.getCiudadDestino().equals(filtro)){
+                    System.out.println(salida.getCiudadDestino());
+                    data.add(k);
+                }
+            }
+            });
             
         });   
                 
@@ -200,34 +243,30 @@ public class SistemaBusquedaVista {
         tipoColumns.setMaxWidth(100);
         tipoColumns.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         
+        TableColumn<Migrante,String> seleccionarColumns= new TableColumn<>("Elegir");
+        seleccionarColumns.setMaxWidth(100);
+        seleccionarColumns.setCellValueFactory(new PropertyValueFactory<>("seleccionar"));
+        
         tabla=new TableView<>();
-        if(dp.getValue().toString().equals(filtro)){
+        if(dp.getValue()!=null && dp.getValue().toString().equals(filtro)){
             tabla.setItems(filtrosData(filtro));
         }
-        else{
+        else if(textoDestino.getText()!=null && textoDestino.getText().equals(filtro)){ 
+            tabla.setItems(filtrosData(filtro));
+        }
+        else if(textoCanton.getText()!=null && textoCanton.getText().equals(filtro)){
+                tabla.setItems(filtrosOrigenes(filtro));
+        }else if (texto.getText()!=null && texto.getText().equals(filtro)){
             tabla.setItems(filtrosOrigenes(filtro));
-        };
-        tabla.getColumns().addAll(cedulaColumns,nombreColumns,apellidoColumns,sexoColumns,nacionalidadColumns,fechaNacimientoColumns,tipoColumns);
+        }
+        tabla.getColumns().addAll(cedulaColumns,nombreColumns,apellidoColumns,sexoColumns,nacionalidadColumns,fechaNacimientoColumns,tipoColumns,seleccionarColumns);
         root.getChildren().add(tabla);
-    }
-    public void filtroFecha(){
-            
-    }
-    
-    public void filtroCiudadOrigen(){
-        
-    }
-    
-    public void filtroCantonOrigen(){
-        
-    }
-    
-    public void filtroDestinos(){
-        
+        root.getChildren().add(back());
+        seleccionDato();
     }
     
     private DatePicker crearCalender(){
-        dp= new DatePicker();
+        
         dp.setOnAction((e)->{
             LocalDate localdate=dp.getValue();
         });
@@ -249,7 +288,22 @@ public class SistemaBusquedaVista {
         hb.getChildren().add(back);
         return hb;
     }
-
+    
+    private void seleccionDato(){
+        tabla.setRowFactory(eventoP->{
+        TableRow<Migrante> row= new TableRow<>();
+        row.setOnMouseClicked((evento)->{
+        if (!row.isEmpty() && evento.getButton()==MouseButton.PRIMARY 
+             && evento.getClickCount() == 2) {
+              Migrante mig=row.getItem();
+              miniPaneBusqueda mini= new miniPaneBusqueda(mig);
+              mini.mostrarVentana();
+            //Migrante clickedRow = row.getItem();
+        }
+    });
+        return row;
+        });
+}
     public VBox getRoot() {
         return root;
     }
@@ -259,4 +313,7 @@ public class SistemaBusquedaVista {
     }
     
 }
-
+/**
+ * || k.getNacionalidad().getCanton().equals(filtro)
+ * 
+ */
