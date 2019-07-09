@@ -1,4 +1,11 @@
-Entrada;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayaquil;Guayaquil;1998-02-05;Normal;Maritimo;2019-07-05;Esmeraldas;Ecuador;America del Sur
-Salida;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayaquil;Guayaquil;1998-02-05;Normal;Maritimo;2019-07-06;Santiago de Chile;Chile;America del Sur
-Salida;0950165860;Pablo;Morales;Hombre;Ecuador;America del Sur;Guayas;Guayaquil;2019-07-17;Normal;Aereo;2019-07-07;Paris;Francia;Europa
-Entrada;1306944461;Celenita;Mendoza;Hombre;Switch;Europa;LuxerNur;LuxerNur;1969-08-12;Normal;Aereo;2019-07-06;Guayaquil;Ecuador;America del Sur
+Salida;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayas;Guayaquil;1998-02-05;Normal;Maritimo;2019-07-06;Santiago de Chile;Chile;America del Sur
+Entrada;1306944461;Celenita;Mendoza;Mujer;Switch;Europa;LuxerNur;LuxerNur;1969-08-12;Normal;Aereo;2019-07-06;Guayaquil;Ecuador;America del Sur
+Salida;1306944461;Celenita;Mendoza;Mujer;Switch;Europa;LuxerNur;LuxerNur;1969-08-12;Normal;Aereo;2019-07-06;Quito;Ecuador;America del Sur
+Entrada;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayas;Guayaquil;1998-02-05;Normal;Terrestre;2019-07-05;Esmeraldas;Ecuador;America del Sur
+Salida;0950165860;Pablo;Morales;Hombre;Ecuador;America del Sur;Guayas;El Empalme;1998-03-05;Normal;Terrestre;2019-07-07;Lima;Peru;America del Sur
+Salida;0930074422;Darwin;Mendoza;Hombre;Ecuador;America del Sur;Guayas;Yaguachi;1996-02-05;Discapacidad;Maritimo;2019-07-07;Lima;Peru;America del Sur
+Entrada;0930074422;Darwin;Mendoza;Hombre;Ecuador;America del Sur;Guayas;Yaguachi;1996-02-05;Discapacidad;Aereo;2019-07-09;Quito;Ecuador;America del Sur
+Entrada;0950164320;Luis;Morales;Hombre;Ecuador;America del Sur;Guayas;Guayaquil;1999-12-05;Discapacidad;Terrestre;2019-07-15;Lima;Peru;America del Sur
+Salida;0929573655;William;Tiuquinga;Hombre;Ecuador;America del Sur;Guayas;Bucay;1968-04-05;3era Edad;Maritimo;2019-07-27;Lima;Peru;America del Sur
+Entrada;0929573655;William;Tiuquinga;Hombre;Ecuador;America del Sur;Guayas;Bucay;1968-04-05;3era Edad;Aereo;2019-07-17;Santiago de Chile;Chile;America del Sur
+Salida;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayas;Guayaquil;1998-02-05;Normal;Aereo;2019-07-16;Santiago de Chile;Chile;America del Sur

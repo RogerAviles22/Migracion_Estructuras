@@ -68,8 +68,8 @@ public class Migrante extends Persona{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.nacionalidad);
-        hash = 97 * hash + Objects.hashCode(this.fechaNacimiento);
+        hash = 43 * hash + Objects.hashCode(this.nacionalidad);
+        hash = 43 * hash + Objects.hashCode(this.fechaNacimiento);
         return hash;
     }
 
@@ -87,4 +87,6 @@ public class Migrante extends Persona{
         if(this.getCedula().equals(migrante.getCedula())) return true;
         return false;
     }
+    
+    
 }

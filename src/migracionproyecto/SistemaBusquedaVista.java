@@ -11,8 +11,12 @@ import Modelo.Registrador;
 import Modelo.RegistroMigratorio;
 import Modelo.Salida;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.ListIterator;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -65,7 +69,7 @@ public class SistemaBusquedaVista {
                                                                   BackgroundPosition.DEFAULT,
                                                                   BackgroundSize.DEFAULT)));
         
-        
+        root.getChildren().add(back());
     }
     
     public void body(){
@@ -103,6 +107,7 @@ public class SistemaBusquedaVista {
         opciones.setAlignment(Pos.CENTER);
         opciones.setPadding(new Insets(20));
         selector.setOnAction((e)->{
+            
             opciones.getChildren().clear();
             
         if(selector.getValue().equals("Fecha")){
@@ -127,18 +132,24 @@ public class SistemaBusquedaVista {
             textoDestino.setAlignment(Pos.CENTER);
             textoDestino.setMaxWidth(250);
             opciones.getChildren().add(textoDestino);
+            
+            
     }
     private void TextoCanton(){
-        
             textoCanton.setAlignment(Pos.CENTER);
             textoCanton.setMaxWidth(250);
             opciones.getChildren().add(textoCanton);
+            
+            
     }
     
     private void crearTextos(){
+            
+            texto.setText(null);
             texto.setAlignment(Pos.CENTER);
             texto.setMaxWidth(250);
             opciones.getChildren().add(texto);
+            
         }
     
     private void botonCheck(){
@@ -180,36 +191,47 @@ public class SistemaBusquedaVista {
     public ObservableList<Migrante> filtrosOrigenes(String filtro){
         ObservableList<Migrante> data= FXCollections.observableArrayList();
         HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> run=Registrador.leerArchivo();
+        Set<Migrante>migrantes=new HashSet<>();
         run.forEach((k,v)->{
         if ((k.getNacionalidad().getCiudad().equals(filtro))){
-            data.add(k);
+            migrantes.add(k);
         }else if (k.getNacionalidad().getCanton().equals(filtro)){
-            data.add(k);
+            migrantes.add(k);
         }}
         );
+        migrantes.forEach(evento->{
+            data.add(evento);
+        });
+        
+            
+        
+    
         return data;
     }
-    
     public ObservableList<Migrante> filtrosData(String filtro){
         ObservableList<Migrante> data= FXCollections.observableArrayList();
         HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> run=Registrador.leerArchivo();
         run.forEach((k,v)->{
+            if(!(data.contains(k))){
             HashMap<String,LinkedList<RegistroMigratorio>> p=v;
             v.values().forEach((e)->{
             e.forEach((registro)->{
             if(registro.getFecha().equals(filtro)){
                 data.add(k);
+                
             }else if(registro instanceof Salida){
                 Salida salida=(Salida) registro;
                 if(salida.getCiudadDestino().equals(filtro)){
-                    System.out.println(salida.getCiudadDestino());
-                    data.add(k);
+                    if(!(data.contains(k))){
+                     data.add(k);   
+                    }
+                    
                 }
             }
             });
             
         });   
-                
+        }    
             });
         return data;
     }
@@ -243,9 +265,6 @@ public class SistemaBusquedaVista {
         tipoColumns.setMaxWidth(100);
         tipoColumns.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         
-        TableColumn<Migrante,String> seleccionarColumns= new TableColumn<>("Elegir");
-        seleccionarColumns.setMaxWidth(100);
-        seleccionarColumns.setCellValueFactory(new PropertyValueFactory<>("seleccionar"));
         
         tabla=new TableView<>();
         if(dp.getValue()!=null && dp.getValue().toString().equals(filtro)){
@@ -259,9 +278,9 @@ public class SistemaBusquedaVista {
         }else if (texto.getText()!=null && texto.getText().equals(filtro)){
             tabla.setItems(filtrosOrigenes(filtro));
         }
-        tabla.getColumns().addAll(cedulaColumns,nombreColumns,apellidoColumns,sexoColumns,nacionalidadColumns,fechaNacimientoColumns,tipoColumns,seleccionarColumns);
+        tabla.getColumns().addAll(cedulaColumns,nombreColumns,apellidoColumns,sexoColumns,nacionalidadColumns,fechaNacimientoColumns,tipoColumns);
         root.getChildren().add(tabla);
-        root.getChildren().add(back());
+        
         seleccionDato();
     }
     

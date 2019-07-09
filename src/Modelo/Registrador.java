@@ -28,63 +28,77 @@ public class Registrador {
     
     public static HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> leerArchivo(){
         HashMap<Migrante,HashMap<String,LinkedList<RegistroMigratorio>>> migrantes= new HashMap<>();
-        
+        LinkedList<String> cedulas= new LinkedList<>();
         String fileName = "src/archivos/migrantes.txt";  
+        HashMap<String,LinkedList<RegistroMigratorio>> mig;
+        LinkedList<RegistroMigratorio> registros;
         try(BufferedReader inputStream = new BufferedReader(new FileReader(fileName));)
         { 
             String line = null;
-            HashMap<String,LinkedList<RegistroMigratorio>> mig;
-            LinkedList<RegistroMigratorio> registros;
+            
             while( (line = inputStream.readLine()) != null ){
                 Migrante migrante;
                 String[] lines=line.split(";");
-                Nacionalidad nacionalidad= new Nacionalidad(lines[5],lines[6],lines[7],lines[8]);
-                migrante= new Migrante(lines[1],lines[2],lines[3],lines[4],nacionalidad,lines[9],lines[10]);
                 if (lines[0].equals("Entrada")){
                     RegistroMigratorio registro= new Entrada(lines[11],lines[12],lines[13],lines[14],lines[15]);
-                    if(migrantes.containsKey(migrante)){
-                           mig=migrantes.get(migrante);
-                            if(mig.containsKey(lines[0])){
-                                registros=mig.get(lines[0]);
-                                registros.add(registro);
-                            }
-                            else{
-                                registros=new LinkedList<>();
-                                registros.add(registro);
-                                mig.put(lines[0], registros);
-                            } 
-                        }
-                        else{
-                        
+                    if(!cedulas.contains(lines[1])){
+                        Nacionalidad nacionalidad= new Nacionalidad(lines[5],lines[6],lines[7],lines[8]);
+                        migrante= new Migrante(lines[1],lines[2],lines[3],lines[4],nacionalidad,lines[9],lines[10]);
                         mig=new HashMap<>();
                         registros=new LinkedList<>();
                         registros.add(registro);
                         mig.put(lines[0], registros);
                         migrantes.put(migrante, mig);
                     }
-                    }
-                    
-                else if(lines[0].equals("Salida")){
-                    RegistroMigratorio registro= new Salida(lines[11],lines[12],lines[13],lines[14],lines[15]);
-                    if(migrantes.containsKey(migrante)){
-                            mig=migrantes.get(migrante);
-                            if(mig.containsKey(lines[0])){
+                    else if(cedulas.contains(lines[1])){
+                        
+                        for(Migrante e: migrantes.keySet()){
+                            if(e.getCedula().equals(lines[1])){
+                                mig=migrantes.get(e);
+                                if(mig.containsKey(lines[0])){
                                 registros=mig.get(lines[0]);
                                 registros.add(registro);
-                            }
-                            else{
-                                registros=new LinkedList<>();
-                                registros.add(registro);
-                                mig.put(lines[0], registros);
-                            }
-                        } else{
+                            }   if(!(mig.containsKey(lines[0]))){
+                                 registros=new LinkedList<>();
+                                 registros.add(registro);
+                                 migrantes.get(e).put(lines[0], registros);
+                                }
+                            }   
+                }
+            }
+                    }
+                else if(lines[0].equals("Salida")){
+                        RegistroMigratorio registro= new Salida(lines[11],lines[12],lines[13],lines[14],lines[15]);
+                        if(!cedulas.contains(lines[1])){
+                            Nacionalidad nacionalidad= new Nacionalidad(lines[5],lines[6],lines[7],lines[8]);
+                            migrante= new Migrante(lines[1],lines[2],lines[3],lines[4],nacionalidad,lines[9],lines[10]);
                             mig=new HashMap<>();
                             registros=new LinkedList<>();
                             registros.add(registro);
                             mig.put(lines[0], registros);
                             migrantes.put(migrante, mig);
+                            cedulas.add(lines[1]);
                     }
+                        else if(cedulas.contains(lines[1])){
+                        for(Migrante e: migrantes.keySet()){
+                            if(e.getCedula().equals(lines[1])){
+                                mig=migrantes.get(e);
+                                if(mig.containsKey(lines[0])){
+                                registros=mig.get(lines[0]);
+                                registros.add(registro);
+                        }
+                                if(!(mig.containsKey(lines[0]))){
+                                 registros=new LinkedList<>();
+                                 registros.add(registro);
+                                 migrantes.get(e).put(lines[0],registros);
+                                }
+                            }   
                 }
+            }
+                }    
+                        
+                        
+               
                     
                 }
         }
@@ -95,7 +109,8 @@ public class Registrador {
         catch(IOException e)
         {
            System.out.println("Error reading from file " + fileName);
-        }       
+        }  
+        //System.out.println(migrantes.keySet());
         return migrantes;
     }
     
@@ -212,7 +227,7 @@ public class Registrador {
     catch (IOException ex) {
       ex.printStackTrace();
     }
-    VentanaEmergente.eliminarMigrante();
+    
   }
     
     public static void main(String[] args){

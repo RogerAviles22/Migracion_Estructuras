@@ -287,7 +287,7 @@ public class Datos {
         Eliminar= new Button("ELIMINAR");
         Eliminar.setOnAction((e)->{
             Registrador.EliminarData(migrante, registro);
-            
+            VentanaEmergente.eliminarMigrante();
             SistemaMenuPrincipal p = new SistemaMenuPrincipal();
             MigracionProyecto.scene.setRoot(p.getRoot());
         });
@@ -306,8 +306,12 @@ public class Datos {
             migrante.setSexo(sexoT.getValue().toString());
             Nacionalidad nacionalidad=new Nacionalidad(paisOrigenT.getText(),continenteOrigenT.getText(),ciudadOrigenT.getText(),cantonOrigenT.getText());
             migrante.setNacionalidad(nacionalidad);
+            migrante.setTipo(tipoT.getValue().toString());
+            migrante.setFechaNacimiento(dp.getValue().toString());
             registro.setFecha(fechaActualT.getText());
             registro.setMedioTrans(medioTransT.getText());
+            
+            
             if(registro instanceof Entrada){
                 Entrada entrada = (Entrada ) registro;
                 entrada.setCiudadIngreso(ciudadT.getText());
@@ -319,7 +323,7 @@ public class Datos {
                 salida.setContinenteDestino(continenteT.getText());
                 salida.setPaisDestino(paisT.getText());
             }
-        Registrador.EscribirArchivo(filtro, migrante, registro);
+        Registrador.EscribirArchivo(categoriaT.getValue().toString(), migrante, registro);
         VentanaEmergente.modificarMigrante();
             
     }
