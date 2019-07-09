@@ -1,5 +1,4 @@
 Entrada;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayaquil;Guayaquil;1998-02-05;Normal;Maritimo;2019-07-05;Esmeraldas;Ecuador;America del Sur
-Entrada;1306944461;Celenita;Mendoza;Hombre;Switch;Europa;LuxerNur;LuxerNur;1969-08-12;Normal;Aereo;2019-07-06;Quito;Ecuador;America del Sur
 Salida;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayaquil;Guayaquil;1998-02-05;Normal;Maritimo;2019-07-06;Santiago de Chile;Chile;America del Sur
-Entrada;0950165811;Jose;Morales;Hombre;Ecuador;America del Sur;Guayaquil;Guayaquil;1998-02-05;Normal;Maritimo;2019-07-06;Santiago;Chile;America del Sur
-Salida;1306944461;Celenita;Mendoza;Hombre;Switch;Europa;LuxerNur;LuxerNur;1969-08-12;Normal;Maritimo;2019-07-06;Luxenburge;Chile;America del SurEntradaEntrada
+Salida;0950165860;Pablo;Morales;Hombre;Ecuador;America del Sur;Guayas;Guayaquil;2019-07-17;Normal;Aereo;2019-07-07;Paris;Francia;Europa
+Entrada;1306944461;Celenita;Mendoza;Hombre;Switch;Europa;LuxerNur;LuxerNur;1969-08-12;Normal;Aereo;2019-07-06;Guayaquil;Ecuador;America del Sur

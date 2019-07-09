@@ -250,14 +250,18 @@ public class SistemaRegistroVista {
         confirmarRegistro=new Button("CONFIRMAR");
         confirmarRegistro.setOnAction(e->{
             
-            if (!(cedulaT.getText()==null && nombreT.getText()==null)){
+            if ((cedulaT.getText()!=null || nombreT.getText()!=null)){
              Nacionalidad nacionalidad= new Nacionalidad(paisOrigenT.getText(),continenteOrigenT.getText(),ciudadOrigenT.getText(),cantonOrigenT.getText());
              migrante=new Migrante(cedulaT.getText(),nombreT.getText(),apellidoT.getText(),sexoT.getPromptText(),nacionalidad,fechaNacimientoT.toString(),tipoT.getPromptText());
              registro=new Salida(medioTransT.getText(),fechaActualT.getText(),ciudadT.getText(),paisT.getText(),continenteT.getText());
-             agente.EscribirArchivo(categoriaT.getValue().toString(), migrante, registro);
-             VentanaEmergente.crearMigrante();
-             limpiarData();
-             eliminarSesiones();
+             
+             
+                agente.EscribirArchivo(categoriaT.getValue().toString(), migrante, registro);
+                VentanaEmergente.crearMigrante();
+                limpiarData();
+                eliminarSesiones(); 
+             
+             
             }
             
             

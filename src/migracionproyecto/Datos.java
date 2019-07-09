@@ -41,6 +41,7 @@ public class Datos {
     private GridPane root;
     private Button ModificarRegistro;
     private Button AtrasRegistro;
+    private Button Eliminar;
     private  Migrante migrante;///
     private Registrador agente=new Registrador();///
     private  RegistroMigratorio registro;///
@@ -259,18 +260,18 @@ public class Datos {
                 ciudadOrigenT.setText(migrante.getNacionalidad().getCiudad());
                 cantonOrigenT.setText(migrante.getNacionalidad().getCanton());
                 continenteOrigenT.setText(migrante.getNacionalidad().getContinente());
-                fechaActualT.setPromptText(registro.getFecha());
-                medioTransT.setPromptText(registro.getMedioTrans());
+                fechaActualT.setText(registro.getFecha());
+                medioTransT.setText(registro.getMedioTrans());
                 if(registro instanceof Entrada){
                     Entrada entrada=(Entrada ) registro;
-                    paisT.setPromptText(entrada.getPaisIngreso());
-                    ciudadT.setPromptText(entrada.getCiudadIngreso());
-                    continenteT.setPromptText(entrada.getContinenteIngreso());
+                    paisT.setText(entrada.getPaisIngreso());
+                    ciudadT.setText(entrada.getCiudadIngreso());
+                    continenteT.setText(entrada.getContinenteIngreso());
                 }else{
                     Salida salida=(Salida) registro;
-                    paisT.setPromptText(salida.getPaisDestino());
-                    ciudadT.setPromptText(salida.getCiudadDestino());
-                    continenteT.setPromptText(salida.getContinenteDestino());
+                    paisT.setText(salida.getPaisDestino());
+                    ciudadT.setText(salida.getCiudadDestino());
+                    continenteT.setText(salida.getContinenteDestino());
                 }
                     
         return true;
@@ -279,6 +280,26 @@ public class Datos {
         HBox botones= new HBox();
         ModificarRegistro=new Button("CONFIRMAR");
         ModificarRegistro.setOnAction(e->{
+            modificar(migrante,registro);
+            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
+            MigracionProyecto.scene.setRoot(p.getRoot());
+        });
+        Eliminar= new Button("ELIMINAR");
+        Eliminar.setOnAction((e)->{
+            Registrador.EliminarData(migrante, registro);
+            
+            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
+            MigracionProyecto.scene.setRoot(p.getRoot());
+        });
+        botones.getChildren().addAll(ModificarRegistro,Eliminar,back());
+        botones.setAlignment(Pos.CENTER);
+        botones.setPadding(Insets.EMPTY);
+        botones.setSpacing(30);
+        root.add(botones, 0, 3);
+    }
+    
+    private void modificar(Migrante migrante, RegistroMigratorio registro){
+        Registrador.EliminarData(migrante, registro);
             migrante.setCedula(cedulaT.getText());
             migrante.setNombre(nombreT.getText());
             migrante.setApellido(apellidoT.getText());
@@ -298,30 +319,23 @@ public class Datos {
                 salida.setContinenteDestino(continenteT.getText());
                 salida.setPaisDestino(paisT.getText());
             }
-            VentanaEmergente.modificarMigrante();
-            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
-            MigracionProyecto.scene.setRoot(p.getRoot());
-        });
-        Button Eliminar= new Button("ELIMINAR");
-        Eliminar.setOnAction((e)->{
-            SistemaMenuPrincipal p = new SistemaMenuPrincipal();
-            MigracionProyecto.scene.setRoot(p.getRoot());
-        });
+        Registrador.EscribirArchivo(filtro, migrante, registro);
+        VentanaEmergente.modificarMigrante();
+            
+    }
+    
+    private Button back(){
         Image image = new Image(getClass().getResourceAsStream("/Recursos/back.png"));
         ImageView view = new ImageView(image);
-        AtrasRegistro= new Button();
-        AtrasRegistro.setBackground(Background.EMPTY);
-        AtrasRegistro.setContentDisplay(ContentDisplay.TOP);
-        AtrasRegistro.setGraphic(view);
-        AtrasRegistro.setOnAction(e->{
+        Button back = new Button();
+        back.setBackground(Background.EMPTY);
+        back.setContentDisplay(ContentDisplay.TOP);
+        back.setGraphic(view);
+        back.setOnAction(e->{
             SistemaMenuPrincipal p = new SistemaMenuPrincipal();
             MigracionProyecto.scene.setRoot(p.getRoot());
         });
-        botones.getChildren().addAll(ModificarRegistro,Eliminar,AtrasRegistro);
-        botones.setAlignment(Pos.CENTER);
-        botones.setPadding(Insets.EMPTY);
-        botones.setSpacing(30);
-        root.add(botones, 0, 3);
+        return back;
     }
     private void eliminarSesiones(){
         root2.getChildren().removeAll(medioTrans,pais,ciudad,continente,medioTransT,paisT,ciudadT,continenteT);

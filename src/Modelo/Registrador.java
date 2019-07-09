@@ -5,12 +5,15 @@
  */
 package Modelo;
 
+import Controlador.VentanaEmergente;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.HashMap; 
 import java.util.LinkedList;
@@ -126,8 +129,99 @@ public class Registrador {
         }
     }
     
+    public static void modificarData(Migrante migrante, RegistroMigratorio registro){
+        String fileName = "src/archivos/migrantes.txt"; 
+        
+       try(BufferedReader inputStream = new BufferedReader(new FileReader(fileName));)
+        { 
+            String line=null;
+          while( (line = inputStream.readLine()) != null ){
+              String[] lines=line.split(";");
+              
+          }  
+        } 
+        catch(FileNotFoundException e)
+        {
+          System.out.println("File " + fileName + " not found.");
+        }
+        catch(IOException e)
+        {
+           System.out.println("Error reading from file " + fileName);
+        }       
+    }
+    
+    public static void EliminarData(Migrante migrante,RegistroMigratorio registro) {
+        String fileNameT = "src/archivos/migrantes.txt";
+    try {
+
+      File fileName = new File(fileNameT);
+
+      if (!fileName.isFile()) {
+        System.out.println("Parameter is not an existing file");
+        return;
+      }
+
+      //Construir un nuevo archivo que me se va a ir modificando
+      File tempFile = new File(fileName.getAbsolutePath() + ".tmp");
+
+      BufferedReader br = new BufferedReader(new FileReader(fileNameT));
+      PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+
+      String line = null;
+      while ((line = br.readLine()) != null) {
+            String lineTo=null;
+            if(registro instanceof Entrada){
+                Entrada entrada=(Entrada) registro;
+                lineTo="Entrada"+";"+migrante.getCedula()+";"+migrante.getNombre()+";"+migrante.getApellido()+";"+migrante.getSexo()+";"+
+                        migrante.getNacionalidad().getPais()+";"+migrante.getNacionalidad().getContinente()+";"+migrante.getNacionalidad().getCiudad()+";"+
+                        migrante.getNacionalidad().getCanton()+";"+migrante.getFechaNacimiento()+";"+migrante.getTipo()+";"+entrada.getMedioTrans()+";"+entrada.getFecha()+
+                        ";"+entrada.getCiudadIngreso()+";"+entrada.getPaisIngreso()+";"+entrada.getContinenteIngreso();
+                    
+                }else if(registro instanceof Salida){
+                    Salida salida=(Salida) registro;
+                    lineTo="Salida"+";"+migrante.getCedula()+";"+migrante.getNombre()+";"+migrante.getApellido()+";"+migrante.getSexo()+";"+
+                        migrante.getNacionalidad().getPais()+";"+migrante.getNacionalidad().getContinente()+";"+migrante.getNacionalidad().getCiudad()+";"+
+                        migrante.getNacionalidad().getCanton()+";"+migrante.getFechaNacimiento()+";"+migrante.getTipo()+";"+registro.getMedioTrans()+";"+registro.getFecha()+";"+
+                        salida.getCiudadDestino()+";"+salida.getPaisDestino()+";"+salida.getContinenteDestino();
+                   
+                }
+        
+        if (!line.trim().equals(lineTo)) {
+
+          pw.println(line);
+          pw.flush();
+        }
+      }
+      pw.close();
+      br.close();
+
+      //Delete the original file
+      if (!fileName.delete()) {
+        System.out.println("Could not delete file");
+        return;
+      }
+
+      //Rename the new file to the filename the original file had.
+      if (!tempFile.renameTo(fileName))
+        System.out.println("Could not rename file");
+
+    }
+    catch (FileNotFoundException ex) {
+      ex.printStackTrace();
+    }
+    catch (IOException ex) {
+      ex.printStackTrace();
+    }
+    VentanaEmergente.eliminarMigrante();
+  }
+    
     public static void main(String[] args){
-            System.out.println(leerArchivo().keySet());
+        //Salida;1306944461;Celenita;Mendoza;Hombre;Switch;Europa;LuxerNur;LuxerNur;1969-08-12;Normal;Maritimo;2019-07-06;Luxenburge;Chile;America del SurEntradaEntrada
+                Nacionalidad nacionalidad= new Nacionalidad("Switch","Europa","LuxerNur","LuxerNur");
+                Migrante migrante= new Migrante("1306944461","Celenita","Mendoza","Hombre",nacionalidad,"1969-08-12","Normal");
+                RegistroMigratorio registro= new Salida("Maritimo","2019-07-06","Luxenburge","Chile","America del Sur");
+                EliminarData(migrante,registro);
+            System.out.println(leerArchivo());
         
     }
 }

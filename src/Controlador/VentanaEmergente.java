@@ -97,4 +97,11 @@ public class VentanaEmergente {
         alert.showAndWait();
     }
     
+    public static void eliminarMigrante(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Registro Eliminado");
+        alert.setHeaderText("Registro eliminado con exito!");
+        alert.showAndWait();
+    }
+    
 }
